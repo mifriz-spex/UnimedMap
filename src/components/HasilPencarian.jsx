@@ -9,7 +9,6 @@ function geserFokus(e) {
   if (i === -1) return
   e.preventDefault()
   if (e.key === 'ArrowUp' && i === 0) {
-    // kembali ke kolom pencarian
     e.currentTarget.closest('section')?.querySelector('input[type="search"]')?.focus()
     return
   }
@@ -17,7 +16,17 @@ function geserFokus(e) {
   berikut?.focus()
 }
 
-const kelas = 'flex w-full items-start gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left hover:border-sky-400 hover:bg-sky-50 focus-visible:bg-sky-50'
+const kelas = 'flex w-full items-start gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left transition-colors hover:border-sky-400 hover:bg-sky-50 focus-visible:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-65 disabled:hover:border-slate-200 disabled:hover:bg-white'
+
+function BadgeFakultas({ fakultas }) {
+  if (!fakultas) return null
+  const label = fakultas === 'Fasilitas Umum' ? 'Umum' : fakultas
+  return (
+    <span className="ml-2 inline-flex flex-none items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700">
+      {label}
+    </span>
+  )
+}
 
 export default function HasilPencarian({ hasil, kueri, namaTempat, onPilihTempat, onPilihRuangan, onSaran, denganJarak }) {
   if (!kueri.trim()) return null
@@ -35,7 +44,7 @@ export default function HasilPencarian({ hasil, kueri, namaTempat, onPilihTempat
             ?
           </p>
         )}
-        <p className="mt-2 text-slate-600">Coba kata yang lebih singkat, misalnya nama gedung, &ldquo;toilet&rdquo;, atau &ldquo;dekan&rdquo;.</p>
+        <p className="mt-2 text-slate-600">Coba kata yang lebih singkat, misalnya nama gedung, fakultas, &ldquo;toilet&rdquo;, atau &ldquo;dekan&rdquo;.</p>
       </div>
     )
   }
@@ -46,20 +55,26 @@ export default function HasilPencarian({ hasil, kueri, namaTempat, onPilihTempat
         <section aria-label="Hasil gedung dan tempat">
           <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">Gedung dan tempat</h3>
           <ul className="space-y-1.5">
-            {hasil.tempat.map(({ tempat, jarak }) => (
-              <li key={tempat.id}>
-                <button type="button" data-hasil className={kelas} onClick={() => onPilihTempat(tempat)}>
-                  <span className="mt-0.5 text-sky-800"><IkonGedung /></span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-semibold text-slate-900">{tempat.nama}</span>
-                    <span className="block text-xs text-slate-600">
-                      {KELOMPOK[tempat.kelompok]?.nama}
-                      {denganJarak && Number.isFinite(jarak) ? ` · ${formatJarak(jarak)} dari titik awal` : ''}
+            {hasil.tempat.map(({ tempat, jarak }) => {
+              const subJudul = KELOMPOK[tempat.kelompok]?.nama || tempat.fakultas || 'Area kampus'
+              return (
+                <li key={tempat.id}>
+                  <button type="button" data-hasil className={kelas} onClick={() => onPilihTempat(tempat)}>
+                    <span className="mt-0.5 text-sky-800"><IkonGedung /></span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-start justify-between gap-1">
+                        <span className="font-semibold text-slate-900">{tempat.nama}</span>
+                        <BadgeFakultas fakultas={tempat.fakultas} />
+                      </span>
+                      <span className="mt-0.5 block text-xs text-slate-600">
+                        {subJudul}
+                        {denganJarak && Number.isFinite(jarak) ? ` · ${formatJarak(jarak)} dari titik awal` : ''}
+                      </span>
                     </span>
-                  </span>
-                </button>
-              </li>
-            ))}
+                  </button>
+                </li>
+              )
+            })}
           </ul>
         </section>
       )}
@@ -73,26 +88,33 @@ export default function HasilPencarian({ hasil, kueri, namaTempat, onPilihTempat
           )}
           <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">Ruangan</h3>
           <ul className="space-y-1.5">
-            {hasil.ruangan.map((r) => (
-              <li key={r.id}>
-                <button type="button" data-hasil className={kelas} onClick={() => onPilihRuangan(r)} disabled={!r.tempatId}>
-                  <span className="mt-0.5 text-teal-800"><IkonRuang /></span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-semibold text-slate-900">{r.nama}</span>
-                    <span className="block text-xs text-slate-600">
-                      {namaTempat.get(r.tempatId) || 'Gedung belum dikenal'} · {teksLantai(r.lantai)}
-                      {r.jumlah > 1 ? ` · ${r.jumlah} ruangan` : ''}
-                      {r.kodeTampil && r.jumlah === 1 ? ` · kode ${r.kodeTampil}` : ''}
-                      {denganJarak && Number.isFinite(r.jarak) ? ` · ${formatJarak(r.jarak)}` : ''}
+            {hasil.ruangan.map((r) => {
+              const namaGedung = namaTempat.get(r.tempatId) || r.namaGedung || 'Gedung belum dipetakan'
+              return (
+                <li key={r.id}>
+                  <button type="button" data-hasil className={kelas} onClick={() => onPilihRuangan(r)} disabled={!r.tempatId}>
+                    <span className="mt-0.5 text-teal-800"><IkonRuang /></span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-start justify-between gap-1">
+                        <span className="font-semibold text-slate-900">{r.nama}</span>
+                        <BadgeFakultas fakultas={r.fakultas} />
+                      </span>
+                      <span className="mt-0.5 block text-xs text-slate-600">
+                        {namaGedung} · {teksLantai(r.lantai)}
+                        {r.jumlah > 1 ? ` · ${r.jumlah} ruangan` : ''}
+                        {r.kodeTampil && r.jumlah === 1 ? ` · kode ${r.kodeTampil}` : ''}
+                        {denganJarak && Number.isFinite(r.jarak) ? ` · ${formatJarak(r.jarak)}` : ''}
+                        {!r.tempatId ? ' · Titik peta belum tersedia' : ''}
+                      </span>
                     </span>
-                  </span>
-                </button>
-              </li>
-            ))}
+                  </button>
+                </li>
+              )
+            })}
           </ul>
           {hasil.totalRuangan > hasil.ruangan.length && (
             <p className="mt-2 text-xs text-slate-600">
-              Menampilkan {hasil.ruangan.length} dari {hasil.totalRuangan} hasil. Tambahkan kata (misalnya nama gedung) untuk mempersempit.
+              Menampilkan {hasil.ruangan.length} dari {hasil.totalRuangan} hasil. Tambahkan kata (misalnya nama gedung atau fakultas) untuk mempersempit.
             </p>
           )}
         </section>

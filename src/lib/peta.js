@@ -60,22 +60,24 @@ export function batasPeta(bentuk = [], pointsById = {}, margin = 0.0003) {
   ]
 }
 
-/** Warna dan kategori tempat menurut kelompok/fakultas (juga dipakai pada legenda dan pencarian). */
+/** Warna dan kategori tempat menurut fakultas (juga dipakai pada legenda dan pencarian). */
 export const KELOMPOK = {
   pusat: { nama: 'Gedung Pusat / Rektorat', warna: '#4f46e5' },
-  fmipa: { nama: 'FMIPA', warna: '#0284c7' },
-  ft: { nama: 'Fakultas Teknik (FT)', warna: '#ea580c' },
-  fbs: { nama: 'Fakultas Bahasa & Seni (FBS)', warna: '#ca8a04' },
-  fis: { nama: 'Fakultas Ilmu Sosial (FIS)', warna: '#16a34a' },
-  fik: { nama: 'Fakultas Ilmu Keolahragaan (FIK)', warna: '#dc2626' },
-  fe: { nama: 'Fakultas Ekonomi (FE)', warna: '#9333ea' },
-  fip: { nama: 'Fakultas Ilmu Pendidikan (FIP)', warna: '#0891b2' },
-  fk: { nama: 'Fakultas Kedokteran (FK)', warna: '#e11d48' },
-  umum: { nama: 'Fasilitas Umum', warna: '#4b5563' },
-  jurusan: { nama: 'Gedung Jurusan / Kuliah', warna: '#0369a1' },
-  lab: { nama: 'Laboratorium', warna: '#0f766e' },
+  fmipa: { nama: 'FMIPA', warna: '#eab308' },
+  ft: { nama: 'Fakultas Teknik (FT)', warna: '#1e3a8a' },
+  fbs: { nama: 'Fakultas Bahasa & Seni (FBS)', warna: '#f97316' },
+  fis: { nama: 'Fakultas Ilmu Sosial (FIS)', warna: '#dc2626' },
+  fik: { nama: 'Fakultas Ilmu Keolahragaan (FIKK)', warna: '#15803d' },
+  fikk: { nama: 'Fakultas Ilmu Keolahragaan (FIKK)', warna: '#15803d' },
+  fk: { nama: 'Fakultas Kedokteran (FK)', warna: '#4ade80' },
+  fe: { nama: 'Fakultas Ekonomi (FEB)', warna: '#64748b' },
+  feb: { nama: 'Fakultas Ekonomi (FEB)', warna: '#64748b' },
+  fip: { nama: 'Fakultas Ilmu Pendidikan (FIP)', warna: '#38bdf8' },
+  umum: { nama: 'Fasilitas Umum', warna: '#334155' },
+  jurusan: { nama: 'Gedung Jurusan FMIPA', warna: '#eab308' },
+  lab: { nama: 'Laboratorium FMIPA', warna: '#ca8a04' },
   lainnya: { nama: 'Gedung Lainnya', warna: '#b45309' },
-  taman: { nama: 'Taman & Fasilitas Luar', warna: '#15803d' },
+  taman: { nama: 'Taman & Fasilitas Luar', warna: '#16a34a' },
 }
 
 export const URUTAN_KELOMPOK = [
@@ -85,9 +87,9 @@ export const URUTAN_KELOMPOK = [
   'fbs',
   'fis',
   'fik',
+  'fk',
   'fe',
   'fip',
-  'fk',
   'umum',
   'jurusan',
   'lab',

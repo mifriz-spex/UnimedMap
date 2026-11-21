@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { IkonBawah, IkonKembali } from './Ikon'
 import { KELOMPOK } from '../lib/peta'
 import { formatJarak, teksLantai } from '../lib/format'
@@ -9,12 +9,26 @@ import { ambilFotoTempat } from '../lib/foto'
 
 export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, onKembali, onRuteKe, onRuteDari, onBuka, onPilihRuangan }) {
   const [saring, setSaring] = useState('')
+  const [lantaiAktif, setLantaiAktif] = useState('semua')
+
+  useEffect(() => {
+    setSaring('')
+    setLantaiAktif('semua')
+  }, [tempat.id])
+
   const isi = useMemo(() => ringkasanIsi(ruangan, tempat.id), [ruangan, tempat.id])
   const lantai = useMemo(() => ruanganPerLantai(ruangan, tempat.id), [ruangan, tempat.id])
   const terhubung = useMemo(() => tempatTerhubung(indeks, graph, tempat.id), [indeks, graph, tempat.id])
-  const pusat = indeks.daftar.find((t) => t.kelompok === 'pusat')
+
+  const pusat = useMemo(
+    () =>
+      indeks.daftar.find((t) => t.id === 'gedung-biro') ||
+      indeks.daftar.find((t) => t.kelompok === 'pusat'),
+    [indeks]
+  )
   const rel = pusat && pusat.id !== tempat.id ? posisiRelatif(indeks, pusat.id, tempat.id) : null
   const fotoUrl = useMemo(() => ambilFotoTempat(tempat.id), [tempat.id])
+  const infoKelompok = KELOMPOK[tempat.kelompok]
 
   const semuaTitik = useMemo(() => tempat.titikSemua || tempat.titik || [], [tempat])
   const catatanAturan = useMemo(() => {
@@ -37,15 +51,21 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
   const tersaring = useMemo(
     () =>
       lantai
-        .map((l) => ({ ...l, ruangan: kebutuhan.length ? l.ruangan.filter((r) => cocokKebutuhan(normalizeText(`${r.nama} ${r.alias}`), kebutuhan)) : l.ruangan }))
+        .filter((l) => lantaiAktif === 'semua' || String(l.lantai) === String(lantaiAktif))
+        .map((l) => ({
+          ...l,
+          ruangan: kebutuhan.length
+            ? l.ruangan.filter((r) => cocokKebutuhan(normalizeText(`${r.nama} ${r.alias}`), kebutuhan))
+            : l.ruangan,
+        }))
         .filter((l) => l.ruangan.length),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [lantai, saring]
+    [lantai, saring, lantaiAktif]
   )
 
   return (
     <article aria-label={`Rincian ${tempat.nama}`} className="space-y-5">
-      <button type="button" onClick={onKembali} className="inline-flex items-center gap-1 text-sm font-semibold text-sky-800">
+      <button type="button" onClick={onKembali} className="inline-flex items-center gap-1 text-sm font-semibold text-sky-800 hover:text-sky-950">
         <IkonKembali ukuran={16} /> Kembali
       </button>
 
@@ -61,11 +81,27 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
       )}
 
       <header>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">{KELOMPOK[tempat.kelompok]?.nama}</p>
+        {infoKelompok && (
+          <span
+            className="mb-1.5 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold"
+            style={{
+              backgroundColor: `${infoKelompok.warna}18`,
+              borderColor: `${infoKelompok.warna}55`,
+              color: infoKelompok.warna,
+            }}
+          >
+            <span className="h-2 w-2 rounded-full" style={{ backgroundColor: infoKelompok.warna }} />
+            {tempat.fakultas && tempat.fakultas !== infoKelompok.nama
+              ? `${tempat.fakultas} · ${infoKelompok.nama}`
+              : infoKelompok.nama}
+          </span>
+        )}
         <h2 className="text-xl font-bold text-slate-900">{tempat.nama}</h2>
-        {tempat.namaLengkap && tempat.namaLengkap !== tempat.nama && <p className="text-sm text-slate-700">{tempat.namaLengkap}</p>}
+        {tempat.namaLengkap && tempat.namaLengkap !== tempat.nama && (
+          <p className="text-sm text-slate-700">{tempat.namaLengkap}</p>
+        )}
         <p className="mt-1 text-sm text-slate-800">
-          {rel ? `Di ${rel.arah} ${pusat.nama}, sekitar ${formatJarak(rel.jarak)} dari pusat kawasan.` : 'Berada di pusat kawasan.'}
+          {rel ? `Di ${rel.arah} ${pusat.nama}, sekitar ${formatJarak(rel.jarak)} dari pusat kampus.` : 'Berada di pusat kawasan kampus.'}
           {tempat.gedung.length > 0 && ` Kode gedung ${tempat.gedung.map((g) => g.kode).join(' dan ')}.`}
         </p>
       </header>
@@ -88,8 +124,12 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
       )}
 
       <div className="grid grid-cols-2 gap-2">
-        <button type="button" onClick={() => onRuteKe(tempat.id)} className="rounded-xl bg-sky-800 px-3 py-3 font-semibold text-white hover:bg-sky-900">Rute ke sini</button>
-        <button type="button" onClick={() => onRuteDari(tempat.id)} className="rounded-xl border border-slate-300 px-3 py-3 font-semibold text-slate-900 hover:bg-slate-50">Rute dari sini</button>
+        <button type="button" onClick={() => onRuteKe(tempat.id)} className="rounded-xl bg-sky-800 px-3 py-3 font-semibold text-white hover:bg-sky-900">
+          Rute ke sini
+        </button>
+        <button type="button" onClick={() => onRuteDari(tempat.id)} className="rounded-xl border border-slate-300 px-3 py-3 font-semibold text-slate-900 hover:bg-slate-50">
+          Rute dari sini
+        </button>
       </div>
 
       {terhubung.length > 0 && (
@@ -97,7 +137,12 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
           <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">Tersambung langsung dengan</h3>
           <div className="flex flex-wrap gap-2">
             {terhubung.map(({ tempat: t, jarak }) => (
-              <button key={t.id} type="button" onClick={() => onBuka(t.id)} className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-900 hover:border-sky-500 hover:bg-sky-50">
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => onBuka(t.id)}
+                className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-900 hover:border-sky-500 hover:bg-sky-50"
+              >
                 {t.label} <span className="font-normal text-slate-600">· {formatJarak(jarak)}</span>
               </button>
             ))}
@@ -120,7 +165,13 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
                     {p.contoh.map((r, i) => (
                       <span key={r.id}>
                         {i > 0 && ', '}
-                        <button type="button" className="underline decoration-dotted underline-offset-2 hover:text-sky-800" onClick={() => onPilihRuangan(r)}>{r.nama}</button>
+                        <button
+                          type="button"
+                          className="underline decoration-dotted underline-offset-2 hover:text-sky-800"
+                          onClick={() => onPilihRuangan(r)}
+                        >
+                          {r.nama}
+                        </button>
                       </span>
                     ))}
                     {p.jumlah > p.contoh.length ? `, dan ${p.jumlah - p.contoh.length} lainnya` : ''}
@@ -133,19 +184,73 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
           <section aria-label="Isi gedung per lantai">
             <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">Isi gedung per lantai</h3>
             <label htmlFor="saring-ruangan" className="sr-only">Saring ruangan di gedung ini</label>
-            <input id="saring-ruangan" type="search" value={saring} onChange={(e) => setSaring(e.target.value)} placeholder="Cari di gedung ini" autoComplete="off" className="mb-2 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-base placeholder:text-slate-500" />
+            <input
+              id="saring-ruangan"
+              type="search"
+              value={saring}
+              onChange={(e) => setSaring(e.target.value)}
+              placeholder="Cari di gedung ini"
+              autoComplete="off"
+              className="mb-2 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-base placeholder:text-slate-500"
+            />
+
+            {lantai.length > 1 && (
+              <div className="mb-2.5 flex gap-1.5 overflow-x-auto pb-1">
+                <button
+                  type="button"
+                  onClick={() => setLantaiAktif('semua')}
+                  className={`flex-none rounded-full px-3 py-1 text-xs font-semibold transition ${
+                    lantaiAktif === 'semua'
+                      ? 'bg-sky-800 text-white'
+                      : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  Semua ({isi.total})
+                </button>
+                {lantai.map((l) => {
+                  const kunci = String(l.lantai)
+                  const aktif = lantaiAktif === kunci
+                  return (
+                    <button
+                      key={kunci}
+                      type="button"
+                      onClick={() => setLantaiAktif(kunci)}
+                      className={`flex-none rounded-full px-3 py-1 text-xs font-semibold transition ${
+                        aktif
+                          ? 'bg-sky-800 text-white'
+                          : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      {l.lantai === null ? 'Lainnya' : `Lt. ${l.lantai}`}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
             {tersaring.length === 0 && <p className="text-sm text-slate-700">Tidak ada ruangan yang cocok.</p>}
             <div className="space-y-2">
               {tersaring.map((l) => (
-                <details key={l.lantai ?? 'x'} open={Boolean(saring.trim())} className="rounded-xl border border-slate-200 bg-white">
+                <details
+                  key={l.lantai ?? 'x'}
+                  open={Boolean(saring.trim()) || lantaiAktif !== 'semua' || lantai.length === 1}
+                  className="rounded-xl border border-slate-200 bg-white"
+                >
                   <summary className="flex cursor-pointer items-center justify-between px-3 py-2.5 font-semibold text-slate-900">
-                    <span>{l.lantai === null ? 'Lantai belum tercatat' : teksLantai(l.lantai)} <span className="font-normal text-slate-600">· {l.ruangan.length} ruangan</span></span>
+                    <span>
+                      {l.lantai === null ? 'Lantai belum tercatat' : teksLantai(l.lantai)}{' '}
+                      <span className="font-normal text-slate-600">· {l.ruangan.length} ruangan</span>
+                    </span>
                     <IkonBawah ukuran={18} />
                   </summary>
                   <ul className="divide-y divide-slate-100 border-t border-slate-100">
                     {l.ruangan.map((r) => (
                       <li key={r.id}>
-                        <button type="button" onClick={() => onPilihRuangan(r)} className="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-sm hover:bg-sky-50">
+                        <button
+                          type="button"
+                          onClick={() => onPilihRuangan(r)}
+                          className="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-sm hover:bg-sky-50"
+                        >
                           <span className="text-slate-900">{r.nama}</span>
                           {r.kodeTampil && <span className="flex-none text-xs text-slate-600">{r.kodeTampil}</span>}
                         </button>

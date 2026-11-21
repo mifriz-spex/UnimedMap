@@ -43,7 +43,6 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
 
     const alasan = []
 
-    // 1. Alasan pintuTertutup: hanya bila ruteTanpaAturan.targetId (atau startId) === id pintu itu DAN berbeda dari rute beraturan
     for (const p of aturan.pintuTertutup || []) {
       const pId = Number(p.id)
       const targetKenaPintu = ruteTanpaAturan.targetId === pId && rute.targetId !== ruteTanpaAturan.targetId
@@ -53,7 +52,6 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
       }
     }
 
-    // 2. Alasan titikUjungSaja: hanya bila ruteTanpaAturan.path.slice(1, -1) memuat titik itu
     const intermediateTanpaAturan = ruteTanpaAturan.path.slice(1, -1)
     for (const u of aturan.titikUjungSaja || []) {
       const uId = Number(u.id)
@@ -90,26 +88,32 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
 
   return (
     <section aria-label="Hasil rute" className="space-y-4">
-      <div role="status" aria-live="polite" className="rounded-2xl bg-sky-900 p-4 text-white">
+      <div role="status" aria-live="polite" className="rounded-2xl bg-sky-900 p-4 text-white shadow-xs">
+        <p className="text-xs font-semibold uppercase tracking-wide text-sky-200">
+          Menuju {tujuan.ruangan ? `${tujuan.ruangan.nama} (${namaTujuan})` : namaTujuan}
+        </p>
         {sama ? (
           <>
-            <p className="text-lg font-bold">Kamu sudah di {namaTujuan}</p>
-            <p className="mt-1 text-sm text-sky-100">Titik awal dan tujuan berada di tempat yang sama.</p>
+            <p className="mt-1 text-lg font-bold">Kamu sudah di {namaTujuan}</p>
+            <p className="mt-1 text-sm text-sky-100">Titik awal dan tujuan berada di gedung yang sama.</p>
           </>
         ) : (
           <>
-            <p className="text-3xl font-bold">{formatJarak(rute.distance)}</p>
-            <p className="text-sky-100">{teksMenit(rute.distance)} berjalan kaki</p>
+            <div className="mt-1 flex items-baseline gap-2.5">
+              <p className="text-3xl font-bold">{formatJarak(rute.distance)}</p>
+              <span className="rounded-full bg-sky-800 px-2.5 py-0.5 text-xs font-medium text-sky-100">
+                {teksMenit(rute.distance)} jalan kaki
+              </span>
+            </div>
             <p className="mt-2 text-sm text-sky-50">Masuk lewat: <b>{masuk}</b></p>
           </>
         )}
       </div>
 
-      {/* Kartu informasi penyesuaian aturan jika aturan mengubah rute */}
       {aturanBerpengaruh.length > 0 && (
         <div className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-xs text-sky-950">
           <p className="font-semibold text-sky-900">Penyesuaian Jalur:</p>
-          <ul className="mt-1 list-disc pl-4 space-y-0.5 text-sky-900">
+          <ul className="mt-1 list-disc space-y-0.5 pl-4 text-sky-900">
             {aturanBerpengaruh.map((teks, idx) => (
               <li key={idx}>{teks}</li>
             ))}
@@ -117,7 +121,6 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         </div>
       )}
 
-      {/* Kartu informasi ruangan awal jika dipilih */}
       {asal.ruangan && (
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-950">
           <p className="font-semibold text-emerald-900">Titik berangkat: {asal.ruangan.nama}</p>
@@ -125,15 +128,13 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         </div>
       )}
 
-      {/* Kartu informasi ruangan tujuan */}
       {tujuan.ruangan && (
         <div className="rounded-xl border border-teal-200 bg-teal-50 p-3 text-sm text-teal-950">
-          <p className="font-semibold text-teal-900">{tujuan.ruangan.nama}</p>
+          <p className="font-semibold text-teal-900">Tujuan ruangan: {tujuan.ruangan.nama}</p>
           <p className="text-teal-800">{namaTujuan} · {teksLantai(tujuan.ruangan.lantai)}{tujuan.ruangan.kodeTampil ? ` · kode ${tujuan.ruangan.kodeTampil}` : ''}</p>
         </div>
       )}
 
-      {/* Petunjuk navigasi lantai dan koneksi khusus */}
       {navigasiLantai.langkah.length > 0 && (
         <div className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-sm text-sky-950">
           <p className="flex items-center gap-1.5 font-semibold text-sky-900">
@@ -150,7 +151,6 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         </div>
       )}
 
-      {/* Jika gedung sama & lantai sama */}
       {navigasiLantai.jenis === 'sama-gedung-sama-lantai' && asal.ruangan && (
         <div className="rounded-xl border border-teal-200 bg-teal-50 p-3 text-sm text-teal-950">
           <p className="flex gap-1.5 text-teal-900">
@@ -160,7 +160,6 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         </div>
       )}
 
-      {/* Petunjuk umum jika belum ada langkah khusus lantai */}
       {tujuan.ruangan && navigasiLantai.langkah.length === 0 && navigasiLantai.jenis !== 'sama-gedung-sama-lantai' && (
         <div className="rounded-xl border border-teal-200 bg-teal-50 p-3 text-sm text-teal-950">
           <p className="flex gap-1.5 text-teal-900">
@@ -170,7 +169,6 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         </div>
       )}
 
-      {/* Foto tempat tujuan */}
       {fotoTujuan && (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-xs">
           <div className="relative aspect-[4/3] w-full">
