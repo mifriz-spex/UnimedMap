@@ -6,10 +6,14 @@ import { pusatTitik } from '../lib/geo'
 import { tempat as daftarTempat } from '../data'
 import Legenda from './Legenda'
 
-function ikonLabel(teks, bawah = false) {
+function ikonLabel(teks, bawah = false, satelit = false) {
+  const bersih = teks.replace(/[<>&]/g, '')
+  const gayaSatelit = satelit
+    ? ' style="color:#ffffff;text-shadow:0 1px 3px rgba(0,0,0,0.95),0 0 6px rgba(0,0,0,0.95),1px 0 2px rgba(0,0,0,0.9),-1px 0 2px rgba(0,0,0,0.9)"'
+    : ''
   return L.divIcon({
-    className: `peta-label${bawah ? ' peta-label-bawah' : ''}`,
-    html: `<span>${teks.replace(/[<>&]/g, '')}</span>`,
+    className: `peta-label${bawah ? ' peta-label-bawah' : ''}${satelit ? ' peta-label-satelit' : ''}`,
+    html: `<span${gayaSatelit}>${bersih}</span>`,
     iconSize: [0, 0],
   })
 }
@@ -49,18 +53,46 @@ function AturPandangan({ batas, garis, kunciRute }) {
   return null
 }
 
-function KontrolPetaAtas({ batas, tampilJalur, onToggleJalur }) {
+function KontrolPetaAtas({ batas, tampilJalur, onToggleJalur, modePeta, onGantiModePeta }) {
   const map = useMap()
   return (
-    <div className="pointer-events-auto absolute left-2.5 top-2.5 z-[1000] flex flex-wrap items-center gap-1.5">
+    <div className="pointer-events-auto absolute left-2.5 top-2.5 z-[1000] flex max-w-[calc(100%-4rem)] flex-wrap items-center gap-1.5">
       <button
         type="button"
         onClick={() => map.fitBounds(batas, { padding: [16, 16] })}
-        className="rounded-lg bg-white px-3 py-2 text-xs font-semibold text-slate-900 shadow-md hover:bg-slate-50 active:bg-slate-100"
+        className="rounded-lg bg-white/95 px-3 py-2 text-xs font-semibold text-slate-900 shadow-md backdrop-blur-xs hover:bg-white active:bg-slate-100"
         aria-label="Kembali ke tampilan seluruh kampus Unimed"
       >
         Seluruh kampus
       </button>
+
+      <div
+        role="group"
+        aria-label="Pilih tampilan peta"
+        className="inline-flex overflow-hidden rounded-lg bg-white/95 p-0.5 shadow-md backdrop-blur-xs"
+      >
+        {[
+          ['osm', 'Peta'],
+          ['satelit', 'Satelit'],
+        ].map(([id, label]) => {
+          const aktif = modePeta === id
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => onGantiModePeta(id)}
+              aria-pressed={aktif}
+              className={`rounded-md px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+                aktif
+                  ? 'bg-emerald-800 text-white shadow-xs'
+                  : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              {label}
+            </button>
+          )
+        })}
+      </div>
 
       {onToggleJalur && (
         <button
@@ -71,8 +103,8 @@ function KontrolPetaAtas({ batas, tampilJalur, onToggleJalur }) {
           }}
           className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold shadow-md transition-colors ${
             tampilJalur
-              ? 'bg-sky-800 text-white hover:bg-sky-900'
-              : 'bg-white text-slate-700 hover:bg-slate-50 active:bg-slate-100'
+              ? 'bg-emerald-800 text-white hover:bg-emerald-900'
+              : 'bg-white/95 text-slate-700 backdrop-blur-xs hover:bg-white active:bg-slate-100'
           }`}
           aria-pressed={tampilJalur}
           aria-label={tampilJalur ? 'Sembunyikan seluruh rute di peta' : 'Tampilkan seluruh rute di peta'}
@@ -80,7 +112,7 @@ function KontrolPetaAtas({ batas, tampilJalur, onToggleJalur }) {
         >
           <span
             className={`inline-block h-2 w-2 rounded-full transition-colors ${
-              tampilJalur ? 'bg-emerald-400' : 'bg-slate-400'
+              tampilJalur ? 'bg-lime-300' : 'bg-slate-400'
             }`}
           />
           <span>{tampilJalur ? 'Semua rute aktif' : 'Lihat semua rute'}</span>
@@ -127,14 +159,20 @@ function labelTerlihat(map, itemLabel) {
   return terlihat
 }
 
-function LabelGedung({ itemLabel, berpin }) {
+function LabelGedung({ itemLabel, berpin, satelit }) {
   const map = useMap()
   const [versi, setVersi] = useState(0)
   useMapEvents({ zoomend: () => setVersi((v) => v + 1), moveend: () => setVersi((v) => v + 1) })
 
   const ikon = useMemo(
-    () => new Map(itemLabel.map((b) => [b.tempatId, [ikonLabel(b.label, true), ikonLabel(b.label, true)]])),
-    [itemLabel]
+    () =>
+      new Map(
+        itemLabel.map((b) => [
+          b.tempatId,
+          [ikonLabel(b.label, true, satelit), ikonLabel(b.label, true, satelit)],
+        ])
+      ),
+    [itemLabel, satelit]
   )
 
   const terlihat = useMemo(() => {
@@ -146,7 +184,7 @@ function LabelGedung({ itemLabel, berpin }) {
     .filter((b) => terlihat.has(b.tempatId) || berpin.has(b.tempatId))
     .map((b) => (
       <Marker
-        key={b.tempatId}
+        key={`${b.tempatId}-${satelit ? 'sat' : 'osm'}`}
         position={[b.pusat.lat, b.pusat.lon]}
         icon={ikon.get(b.tempatId)[berpin.has(b.tempatId) ? 1 : 0]}
         interactive={false}
@@ -175,6 +213,8 @@ export default function MapView({
   onBatalPilih,
 }) {
   const [petaSiap, setPetaSiap] = useState(false)
+  const [modePeta, setModePeta] = useState('osm')
+  const isSatelit = modePeta === 'satelit'
 
   const garisJalur = useMemo(
     () =>
@@ -230,12 +270,25 @@ export default function MapView({
         whenReady={() => setPetaSiap(true)}
         aria-label="Peta Kampus Unimed"
       >
-        <TileLayer
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          maxZoom={21}
-          maxNativeZoom={19}
-        />
+        {isSatelit ? (
+          <TileLayer
+            key="google-satelit"
+            url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+            subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+            attribution='&copy; Google Maps'
+            maxZoom={21}
+            maxNativeZoom={20}
+          />
+        ) : (
+          <TileLayer
+            key="osm"
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            maxZoom={21}
+            maxNativeZoom={19}
+          />
+        )}
+
         <ZoomControl position="bottomright" />
         <AturPandangan batas={batas} garis={garisRute} kunciRute={kunciRute} />
 
@@ -258,7 +311,16 @@ export default function MapView({
         {/* Jaringan jalan kaki (opsional) */}
         {tampilJalur &&
           garisJalur.map((g) => (
-            <Polyline key={g.id} positions={g.positions} interactive={false} pathOptions={{ color: '#64748b', weight: 3, opacity: 0.7 }} />
+            <Polyline
+              key={g.id}
+              positions={g.positions}
+              interactive={false}
+              pathOptions={{
+                color: isSatelit ? '#facc15' : '#64748b',
+                weight: 3,
+                opacity: isSatelit ? 0.85 : 0.7,
+              }}
+            />
           ))}
 
         {/* Garis rute aktif */}
@@ -302,7 +364,7 @@ export default function MapView({
                 color: '#ffffff',
                 weight: aktif ? 3 : 2,
                 fillColor: warna,
-                fillOpacity: aktif ? 1 : 0.9,
+                fillOpacity: aktif ? 1 : 0.95,
               }}
               eventHandlers={{ click: () => onPilihTempat(g.tempatId) }}
             >
@@ -314,7 +376,11 @@ export default function MapView({
           )
         })}
 
-        <LabelGedung itemLabel={semuaItemLabel} berpin={new Set([asal?.tempatId, tujuanTempatId, terpilih].filter(Boolean))} />
+        <LabelGedung
+          itemLabel={semuaItemLabel}
+          berpin={new Set([asal?.tempatId, tujuanTempatId, terpilih].filter(Boolean))}
+          satelit={isSatelit}
+        />
 
         {titikAsal && <Marker position={[titikAsal.lat, titikAsal.lon]} icon={pinAsal} keyboard={false} title="Titik awal" />}
         {titikTujuan && <Marker position={[titikTujuan.lat, titikTujuan.lon]} icon={pinTujuan} keyboard={false} title="Tujuan" />}
@@ -338,7 +404,13 @@ export default function MapView({
           </>
         )}
 
-        <KontrolPetaAtas batas={batas} tampilJalur={tampilJalur} onToggleJalur={onToggleJalur} />
+        <KontrolPetaAtas
+          batas={batas}
+          tampilJalur={tampilJalur}
+          onToggleJalur={onToggleJalur}
+          modePeta={modePeta}
+          onGantiModePeta={setModePeta}
+        />
       </MapContainer>
 
       <div
@@ -353,7 +425,7 @@ export default function MapView({
       {pilihPeta && (
         <div
           role="status"
-          className="absolute left-1/2 top-2.5 z-[1100] flex w-[calc(100%-6rem)] max-w-sm -translate-x-1/2 items-center gap-2 rounded-xl bg-slate-900 px-3 py-2 text-sm text-white shadow-lg"
+          className="absolute left-1/2 top-14 z-[1100] flex w-[calc(100%-3rem)] max-w-sm -translate-x-1/2 items-center gap-2 rounded-xl bg-slate-900 px-3 py-2 text-sm text-white shadow-lg sm:top-2.5 sm:w-[calc(100%-6rem)]"
         >
           <span className="flex-1">Ketuk titik gedung di peta untuk memilih {pilihPeta === 'asal' ? 'titik awal' : 'tujuan'}.</span>
           <button type="button" onClick={onBatalPilih} className="rounded-lg bg-white/15 px-2.5 py-1 font-semibold hover:bg-white/25">
