@@ -3,7 +3,7 @@ import HasilPencarian from './HasilPencarian'
 import { IkonCari, IkonKembali, IkonLokasi, IkonPeta, IkonTukar } from './Ikon'
 import { kapital, teksLantai } from '../lib/format'
 
-const inputKelas = 'w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-3 text-base text-slate-900 placeholder:text-slate-500 focus:border-sky-600'
+const inputKelas = 'w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-3 text-base text-slate-900 placeholder:text-slate-500 focus:border-emerald-600'
 
 function KotakCari({ id, label, nilai, onUbah, placeholder, onEnter, autoFokus }) {
   return (
@@ -46,11 +46,11 @@ function KartuPilihan({ judul, utama, tambahan, onUbah, warna, onTukar }) {
         {tambahan && <span className="block text-xs text-slate-600">{tambahan}</span>}
       </span>
       {onTukar && (
-        <button type="button" onClick={onTukar} aria-label="Tukar arah" title="Tukar arah" className="rounded-lg p-2 text-sky-800 hover:bg-sky-50">
+        <button type="button" onClick={onTukar} aria-label="Tukar arah" title="Tukar arah" className="rounded-lg p-2 text-emerald-800 hover:bg-emerald-50">
           <IkonTukar ukuran={18} />
         </button>
       )}
-      <button type="button" onClick={onUbah} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-sky-800 hover:bg-sky-50">
+      <button type="button" onClick={onUbah} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">
         Ubah
       </button>
     </div>
@@ -89,7 +89,7 @@ export default function FormRute({
           <>
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-slate-900">Mau ke mana?</h2>
-              {tujuan && <button type="button" onClick={onBatalUbahTujuan} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-sky-800 hover:bg-sky-50">Batal</button>}
+              {tujuan && <button type="button" onClick={onBatalUbahTujuan} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Batal</button>}
             </div>
             <KotakCari
               id="cari-tujuan"
@@ -135,11 +135,11 @@ export default function FormRute({
           <>
             <div className="flex items-center justify-between">
               {tujuan && !bukaTujuan ? <h2 className="text-lg font-bold text-slate-900">Dari mana kamu berangkat?</h2> : <h2 className="text-sm font-semibold text-slate-700">Titik awal (boleh diisi nanti)</h2>}
-              {asal && <button type="button" onClick={onBatalUbahAsal} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-sky-800 hover:bg-sky-50">Batal</button>}
+              {asal && <button type="button" onClick={onBatalUbahAsal} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Batal</button>}
             </div>
             {modeAsal === 'cari' ? (
               <>
-                <button type="button" onClick={() => setModeAsal('menu')} className="inline-flex items-center gap-1 text-sm font-semibold text-sky-800">
+                <button type="button" onClick={() => setModeAsal('menu')} className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-800">
                   <IkonKembali ukuran={16} /> Pilihan lain
                 </button>
                 <div ref={refAsal}>
@@ -160,22 +160,22 @@ export default function FormRute({
               </>
             ) : (
               <div className="grid gap-2">
-                <button type="button" onClick={onGps} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-sky-500 hover:bg-sky-50">
-                  <span className="text-sky-800"><IkonLokasi /></span>
+                <button type="button" onClick={onGps} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50">
+                  <span className="text-emerald-800"><IkonLokasi /></span>
                   <span>
                     <span className="block font-semibold text-slate-900">Gunakan lokasi saya</span>
                     <span className="block text-xs text-slate-600">Paling cepat jika kamu sudah di kampus</span>
                   </span>
                 </button>
-                <button type="button" onClick={() => setModeAsal('cari')} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-sky-500 hover:bg-sky-50">
-                  <span className="text-sky-800"><IkonCari /></span>
+                <button type="button" onClick={() => setModeAsal('cari')} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50">
+                  <span className="text-emerald-800"><IkonCari /></span>
                   <span>
                     <span className="block font-semibold text-slate-900">Cari gedung atau ruangan</span>
                     <span className="block text-xs text-slate-600">Ketik nama gedung atau ruangan di dekatmu</span>
                   </span>
                 </button>
-                <button type="button" onClick={onPilihDiPeta} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-sky-500 hover:bg-sky-50">
-                  <span className="text-sky-800"><IkonPeta /></span>
+                <button type="button" onClick={onPilihDiPeta} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50">
+                  <span className="text-emerald-800"><IkonPeta /></span>
                   <span>
                     <span className="block font-semibold text-slate-900">Pilih di peta</span>
                     <span className="block text-xs text-slate-600">Ketuk gedung pada peta</span>
@@ -186,7 +186,7 @@ export default function FormRute({
           </>
         )}
         {statusGps.pesan && (
-          <p role="status" className={`rounded-lg px-3 py-2 text-sm ${statusGps.jenis === 'galat' ? 'bg-amber-50 text-amber-900' : 'bg-sky-50 text-sky-900'}`}>
+          <p role="status" className={`rounded-lg px-3 py-2 text-sm ${statusGps.jenis === 'galat' ? 'bg-amber-50 text-amber-900' : 'bg-emerald-50 text-emerald-900'}`}>
             {statusGps.pesan}
           </p>
         )}

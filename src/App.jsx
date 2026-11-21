@@ -18,12 +18,12 @@ import MapView from './components/MapView'
 import Panduan from './components/Panduan'
 
 const AdminPage = lazy(() => import('./components/AdminPage'))
-const KUNCI_PANDUAN = 'fmipa_panduan_dilihat'
+const KUNCI_PANDUAN = 'unimed_panduan_dilihat'
 const TINGGI_PANEL = { min: 'h-[12rem]', mid: 'h-[56dvh]', max: 'h-[90dvh]' }
 const URUTAN_PANEL = ['min', 'mid', 'max']
 
 const indeks = bangunIndeksTempat(tempat, graphData.pointsById, aturanJalur)
-const namaCari = new Map(tempat.map((t) => [t.id, `${t.nama} ${t.namaLengkap || ''}`]))
+const namaCari = new Map(tempat.map((t) => [t.id, `${t.nama} ${t.namaLengkap || ''} ${t.fakultas || ''}`]))
 const namaTampil = new Map(tempat.map((t) => [t.id, t.nama]))
 const orientasi = ringkasOrientasi(indeks, graphData.graph)
 const STATUS_GPS_KOSONG = { jenis: '', pesan: '' }
@@ -72,6 +72,10 @@ function Peta() {
   // ---------- turunan ----------
   const kosakata = useMemo(() => bangunKosakata(daftarRuangan, tempat), [daftarRuangan])
   const cepat = useMemo(() => pilihanCepat(daftarRuangan, tempat, namaCari), [daftarRuangan])
+  const jumlahFakultas = useMemo(
+    () => new Set(tempat.map((t) => t.fakultas).filter((f) => f && f !== 'Fasilitas Umum' && f !== 'Rektorat')).size,
+    []
+  )
 
   const asal = useMemo(() => {
     if (asalGps) return { ...asalGps, jenis: 'gps', tempat: indeks.byTitik.get(asalGps.titikId) || null }
@@ -169,7 +173,7 @@ function Peta() {
       const dekat = titikTempat || findNearestPoint(lokasi, graphData.pointsById, { kecualikanTitik: aturanJalur.titikUjungSaja?.map((u) => u.id) || [] })
       setPosisiPengguna({ ...lokasi, akurasi })
       if (!dekat || dekat.distance > JARAK_DI_KAMPUS_M) {
-        setStatusGps({ jenis: 'galat', pesan: `Lokasimu sekitar ${Math.round(dekat?.distance ?? 0)} m dari jalur terdekat, sepertinya di luar kawasan FMIPA. Pilih titik awal secara manual.` })
+        setStatusGps({ jenis: 'galat', pesan: `Lokasimu sekitar ${Math.round(dekat?.distance ?? 0)} m dari jalur terdekat, sepertinya di luar area kampus Unimed. Pilih titik awal secara manual.` })
         setModeAsal('menu')
         return
       }
@@ -207,7 +211,7 @@ function Peta() {
     const url = `${window.location.origin}${window.location.pathname}${tulisUrl({ dari, ke, ruang: ruanganTujuan ? kunciRuangan(ruanganTujuan) : '' })}`
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Rute di FMIPA Unimed', text: `Rute ke ${tujuan.tempat.nama}`, url })
+        await navigator.share({ title: 'Rute Kampus Unimed', text: `Rute ke ${tujuan.tempat.nama}`, url })
         return
       }
       await navigator.clipboard.writeText(url)
@@ -261,17 +265,17 @@ function Peta() {
 
         <header className="flex flex-none items-center justify-between gap-2 px-4 pb-2 pt-1 md:pt-4">
           <div>
-            <h1 className="text-lg font-bold leading-tight text-slate-900">Peta FMIPA Unimed</h1>
-            <p className="hidden text-xs text-slate-600 sm:block">Cari gedung dan ruangan, lihat rute jalan kaki</p>
+            <h1 className="text-lg font-bold leading-tight text-slate-900">Peta Kampus Unimed</h1>
+            <p className="hidden text-xs text-slate-600 sm:block">Navigasi gedung, fakultas &amp; ruangan jalan kaki</p>
           </div>
-          <button type="button" onClick={() => setPanduan(true)} className="inline-flex flex-none items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-semibold text-sky-800 hover:bg-sky-50" aria-label="Buka panduan cara pakai">
+          <button type="button" onClick={() => setPanduan(true)} className="inline-flex flex-none items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50" aria-label="Buka panduan cara pakai">
             <IkonBantuan ukuran={18} /> <span>Cara pakai</span>
           </button>
         </header>
 
         <div role="tablist" aria-label="Menu utama" className="flex flex-none gap-1 border-b border-slate-200 px-4">
           {[['rute', 'Rute'], ['jelajah', 'Jelajahi gedung']].map(([id, label]) => (
-            <button key={id} role="tab" type="button" id={`tab-${id}`} aria-selected={tab === id} aria-controls={`isi-${id}`} onClick={() => { setTab(id); setDetail(null) }} className={`-mb-px border-b-2 px-3 py-2.5 text-sm font-semibold ${tab === id ? 'border-sky-800 text-sky-900' : 'border-transparent text-slate-600 hover:text-slate-900'}`}>
+            <button key={id} role="tab" type="button" id={`tab-${id}`} aria-selected={tab === id} aria-controls={`isi-${id}`} onClick={() => { setTab(id); setDetail(null) }} className={`-mb-px border-b-2 px-3 py-2.5 text-sm font-semibold ${tab === id ? 'border-emerald-800 text-emerald-900' : 'border-transparent text-slate-600 hover:text-slate-900'}`}>
               {label}
             </button>
           ))}
@@ -317,25 +321,25 @@ function Peta() {
                       <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Cari cepat</h3>
                       <div className="flex flex-wrap gap-2">
                         {cepat.map((p) => (
-                          <button key={p.kueri} type="button" onClick={() => setKueriTujuan(p.kueri)} className="rounded-full border border-slate-300 bg-white px-3.5 py-2 text-sm font-semibold text-slate-900 hover:border-sky-500 hover:bg-sky-50">
+                          <button key={p.kueri} type="button" onClick={() => setKueriTujuan(p.kueri)} className="rounded-full border border-slate-300 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50">
                             {p.label}
                           </button>
                         ))}
                       </div>
                     </div>
                   )}
-                  <button type="button" onClick={() => setTab('jelajah')} className="flex w-full items-center justify-between rounded-xl bg-sky-50 px-4 py-3 text-left text-sky-950 hover:bg-sky-100">
+                  <button type="button" onClick={() => setTab('jelajah')} className="flex w-full items-center justify-between rounded-xl border border-emerald-200/70 bg-emerald-50 px-4 py-3 text-left text-emerald-950 transition-colors hover:bg-emerald-100">
                     <span>
-                      <span className="block font-semibold">Baru di FMIPA?</span>
-                      <span className="block text-sm">Kenali gedung-gedungnya dan apa saja isinya.</span>
+                      <span className="block font-semibold">Baru di Unimed?</span>
+                      <span className="block text-sm text-emerald-900">Jelajahi {tempat.length} lokasi di {jumlahFakultas} fakultas &amp; fasilitas kampus.</span>
                     </span>
-                    <IkonBawah ukuran={20} className="-rotate-90" />
+                    <IkonBawah ukuran={20} className="-rotate-90 flex-none text-emerald-800" />
                   </button>
                 </section>
               )}
 
               {tujuan && !asal && (
-                <p className="rounded-xl bg-sky-50 px-4 py-3 text-sm text-sky-950">Pilih titik awal di atas untuk melihat rute ke <b>{tujuan.tempat.nama}</b>.</p>
+                <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-950">Pilih titik awal di atas untuk melihat rute ke <b>{tujuan.tempat.nama}</b>.</p>
               )}
 
               {rute && tujuan && asal && !bukaTujuan && (
@@ -371,19 +375,10 @@ function Peta() {
           )}
 
           <footer className="mt-8 space-y-2 border-t border-slate-200 pt-4 text-xs text-slate-600">
-            <label className="flex items-center justify-between gap-2 cursor-pointer rounded-lg bg-slate-50 p-2 text-slate-700 hover:bg-slate-100">
-              <span className="font-semibold">Tampilkan seluruh rute di peta</span>
-              <input
-                type="checkbox"
-                checked={tampilJalur}
-                onChange={(e) => setTampilJalur(e.target.checked)}
-                className="h-4 w-4 rounded accent-sky-700 cursor-pointer"
-              />
-            </label>
             <p>
               Peta jalur digambar manual dan perkiraan jarak bisa berbeda di lapangan. Data ruangan: {sumber === 'supabase' ? 'database kampus' : 'berkas bawaan'}.
             </p>
-            <p><a href="#/admin" className="underline">Masuk admin</a></p>
+            <p><a href="#/admin" className="underline hover:text-slate-900">Masuk admin</a></p>
           </footer>
         </div>
       </aside>

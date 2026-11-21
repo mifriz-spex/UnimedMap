@@ -25,7 +25,7 @@ export default function Panduan({ onTutup, onJelajahi }) {
         <ol className="mt-4 space-y-3">
           {LANGKAH.map(({ ikon: Ikon, judul, isi }, i) => (
             <li key={judul} className="flex gap-3">
-              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-sky-100 text-sky-800"><Ikon /></span>
+              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-emerald-100 text-emerald-800"><Ikon /></span>
               <span>
                 <span className="block font-semibold text-slate-900">{i + 1}. {judul}</span>
                 <span className="block text-sm text-slate-700">{isi}</span>
@@ -37,7 +37,7 @@ export default function Panduan({ onTutup, onJelajahi }) {
           Rute menunjukkan jalur jalan kaki sampai pintu masuk gedung. Di dalam gedung, ikuti papan petunjuk lantai. Jarak dan waktu tempuh hanyalah perkiraan.
         </p>
         <div className="mt-5 flex flex-col gap-2 sm:flex-row-reverse">
-          <button ref={tombol} type="button" onClick={onTutup} className="rounded-xl bg-sky-800 px-4 py-3 font-semibold text-white hover:bg-sky-900">
+          <button ref={tombol} type="button" onClick={onTutup} className="rounded-xl bg-emerald-800 px-4 py-3 font-semibold text-white hover:bg-emerald-900">
             Mulai
           </button>
           <button type="button" onClick={onJelajahi} className="rounded-xl border border-slate-300 px-4 py-3 font-semibold text-slate-800 hover:bg-slate-50">
