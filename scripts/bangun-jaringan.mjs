@@ -81,7 +81,7 @@ function klasifikasiFakultas(rawName) {
   if (/\b(fmipa|fimpa)\b/.test(s) || /\b(matematika|biologi|fisika|kimia|syawal)\b/.test(s)) {
     return { fakultas: 'FMIPA', kelompok: 'fmipa' }
   }
-  if (/\b(ft|teknik|bangunan|mesin|elektro|pkk|tata rias|gizi|otomotif)\b/.test(s)) {
+  if (/\b(ft|teknik|bangunan|sipil|mesin|elektro|pkk|tata rias|gizi|otomotif)\b/.test(s)) {
     return { fakultas: 'FT', kelompok: 'ft' }
   }
   if (/\b(fbs|seni|tari|bahasa|gallery)\b/.test(s)) {

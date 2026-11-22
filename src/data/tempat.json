@@ -418,7 +418,7 @@
     ],
     "gedung": [],
     "titik": [
-      123
+      122
     ],
     "poligon": null
   },
@@ -981,15 +981,15 @@
     "poligon": null
   },
   {
-    "id": "gedung-praktek-teknik-mesin-ft",
+    "id": "gedung-praktek-teknik-sipil-ft",
     "fid": 53,
-    "nama": "Gedung Praktek Teknik Mesin FT",
-    "label": "Praktek Teknik Mesin FT",
+    "nama": "Gedung Praktek Teknik Sipil FT",
+    "label": "Praktek Teknik Sipil FT",
     "kelompok": "ft",
     "fakultas": "FT",
     "alias": [
-      "Gedung Praktek Teknik Mesin FT",
-      "gedung praktek teknik mesin ft",
+      "Gedung Praktek Teknik Sipil FT",
+      "gedung praktek teknik sipil ft",
       "ft"
     ],
     "gedung": [],

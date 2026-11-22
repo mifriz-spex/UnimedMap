@@ -51,7 +51,7 @@
 { "type": "Feature", "properties": { "fid": 50, "nama_lokasi": "Gedung_PKK_FT" }, "geometry": { "type": "Point", "coordinates": [ 98.713546623524579, 3.606879661883678 ] } },
 { "type": "Feature", "properties": { "fid": 51, "nama_lokasi": "Gedung_Praktek_Teknik_Bangunan_FT" }, "geometry": { "type": "Point", "coordinates": [ 98.712805976353479, 3.606900661317632 ] } },
 { "type": "Feature", "properties": { "fid": 52, "nama_lokasi": "Gedung_Praktek_Tata_Rias_FT" }, "geometry": { "type": "Point", "coordinates": [ 98.712578732335047, 3.607070756714781 ] } },
-{ "type": "Feature", "properties": { "fid": 53, "nama_lokasi": "Gedung_Praktek_Teknik_Mesin_FT" }, "geometry": { "type": "Point", "coordinates": [ 98.712686042010404, 3.607175753857627 ] } },
+{ "type": "Feature", "properties": { "fid": 53, "nama_lokasi": "Gedung_Praktek_Teknik_Sipil_FT" }, "geometry": { "type": "Point", "coordinates": [ 98.712686042010404, 3.607175753857627 ] } },
 { "type": "Feature", "properties": { "fid": 54, "nama_lokasi": "Gedung_Praktek_Teknik_Gizi_FT" }, "geometry": { "type": "Point", "coordinates": [ 98.71267591281871, 3.607546687509253 ] } },
 { "type": "Feature", "properties": { "fid": 55, "nama_lokasi": "Gedung_Kuliah_Bersama_FT" }, "geometry": { "type": "Point", "coordinates": [ 98.712863993460971, 3.607848929074902 ] } },
 { "type": "Feature", "properties": { "fid": 56, "nama_lokasi": "Gedung_Lab_Biologi_Lama" }, "geometry": { "type": "Point", "coordinates": [ 98.713982913891954, 3.60692629661222 ] } },
