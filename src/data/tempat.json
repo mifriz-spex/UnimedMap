@@ -179,6 +179,27 @@
     "poligon": null
   },
   {
+    "id": "lab-komputer",
+    "nama": "Lab. Komputer",
+    "label": "Lab. Komputer",
+    "kelompok": "lab",
+    "fakultas": "FMIPA",
+    "alias": [
+      "laboratorium komputer fmipa",
+      "pusat komputer fmipa"
+    ],
+    "gedung": [
+      {
+        "kode": "009",
+        "lantai": 3
+      }
+    ],
+    "titik": [
+      10
+    ],
+    "poligon": null
+  },
+  {
     "id": "lab-biologi",
     "nama": "Lab. Biologi",
     "label": "Lab. Biologi",
@@ -191,7 +212,14 @@
       {
         "kode": "010",
         "lantai": 4
+      },
+      {
+        "kode": "011",
+        "lantai": 4
       }
+    ],
+    "kodeTambahan": [
+      "010/011?"
     ],
     "titik": [
       11
@@ -220,6 +248,59 @@
     "poligon": null
   },
   {
+    "id": "rumah-kaca",
+    "nama": "Rumah Kaca",
+    "label": "Rumah Kaca",
+    "kelompok": "taman",
+    "fakultas": "FMIPA",
+    "alias": [
+      "greenhouse",
+      "green house fmipa",
+      "taman",
+      "fmipa"
+    ],
+    "gedung": [],
+    "titik": [
+      18
+    ],
+    "poligon": null
+  },
+  {
+    "id": "rumah-hewan",
+    "nama": "Rumah Hewan FMIPA",
+    "label": "Rumah Hewan",
+    "kelompok": "lainnya",
+    "fakultas": "FMIPA",
+    "alias": [
+      "kandang hewan",
+      "hewan uji biologi",
+      "animal house",
+      "fmipa"
+    ],
+    "gedung": [],
+    "titik": [
+      15
+    ],
+    "poligon": null
+  },
+  {
+    "id": "taman-biologi",
+    "nama": "Taman Biologi",
+    "label": "Taman Biologi",
+    "kelompok": "taman",
+    "fakultas": "FMIPA",
+    "alias": [
+      "taman fmipa",
+      "area hijau biologi",
+      "taman"
+    ],
+    "gedung": [],
+    "titik": [
+      17
+    ],
+    "poligon": null
+  },
+  {
     "id": "serbaguna-taman",
     "nama": "Ruang Serbaguna Taman Biologi",
     "label": "Serbaguna Taman",
@@ -241,21 +322,14 @@
     "fid": 7,
     "nama": "Lab Matematika FMIPA",
     "label": "Lab Matematika FMIPA",
-    "kelompok": "lab",
+    "kelompok": "fmipa",
     "fakultas": "FMIPA",
     "alias": [
       "lab matematika fmipa",
-      "lab komputer",
-      "laboratorium komputer fmipa",
-      "pusat komputer fmipa",
+      "lab matematika fmipa",
       "fmipa"
     ],
-    "gedung": [
-      {
-        "kode": "009",
-        "lantai": 3
-      }
-    ],
+    "gedung": [],
     "titik": [
       71
     ],
@@ -1029,12 +1103,7 @@
       "gedung lab biologi lama",
       "fmipa"
     ],
-    "gedung": [
-      {
-        "kode": "011",
-        "lantai": 4
-      }
-    ],
+    "gedung": [],
     "titik": [
       15
     ],
