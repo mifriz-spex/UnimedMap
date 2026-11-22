@@ -32,3 +32,7 @@ lerna-debug.log*
 
 # Local OS files
 Thumbs.db
+
+# agentic
+.GEMINI.md 
+.product_requirements_document_unimedmap.md
