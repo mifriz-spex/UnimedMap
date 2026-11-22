@@ -23,3 +23,4 @@ export const IkonRuang = (p) => (<Svg {...p}><path d="M5 21V8l7-5 7 5v13M10 21v-
 export const IkonKembali = (p) => (<Svg {...p}><path d="m15 18-6-6 6-6" /></Svg>)
 export const IkonJalan = (p) => (<Svg {...p}><circle cx="13" cy="4" r="2" /><path d="m9 21 2-6-3-3 2-4 3 1 2 3 3 1M11 15l3 2 1 4" /></Svg>)
 export const IkonInfo = (p) => (<Svg {...p}><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></Svg>)
+export const IkonHapus = (p) => (<Svg {...p}><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6" /></Svg>)

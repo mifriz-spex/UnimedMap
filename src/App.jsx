@@ -11,7 +11,7 @@ import { bangunIndeksTempat, ringkasOrientasi } from './lib/places'
 import { bacaUrl, tulisUrl } from './lib/urlState'
 import DetailTempat from './components/DetailTempat'
 import FormRute from './components/FormRute'
-import { IkonBantuan, IkonBawah } from './components/Ikon'
+import { IkonBantuan, IkonBawah, IkonPanah } from './components/Ikon'
 import Jelajahi from './components/Jelajahi'
 import KartuRute from './components/KartuRute'
 import MapView from './components/MapView'
@@ -64,6 +64,8 @@ function Peta() {
   const [statusGps, setStatusGps] = useState(STATUS_GPS_KOSONG)
   const [pilihPeta, setPilihPeta] = useState(null)
   const [panel, setPanel] = useState('mid')
+  const [panelTersembunyi, setPanelTersembunyi] = useState(false)
+  const [resetPeta, setResetPeta] = useState(0)
   const [tampilJalur, setTampilJalur] = useState(false)
   const [panduan, setPanduan] = useState(() => !pernahMelihatPanduan())
   const [pesanBagikan, setPesanBagikan] = useState('')
@@ -147,6 +149,7 @@ function Peta() {
     setTab('rute')
     setDetail(null)
     setPanel('mid')
+    setPanelTersembunyi(false)
   }
   const setAsalTempat = (id, ruang = null) => {
     setDari(id)
@@ -160,6 +163,24 @@ function Peta() {
     setTab('rute')
     setDetail(null)
     setPanel('mid')
+    setPanelTersembunyi(false)
+  }
+
+  const bersihkanRute = () => {
+    setDari('')
+    setKe('')
+    setRuanganTujuan(null)
+    setRuanganAsal(null)
+    setAsalGps(null)
+    setKueriTujuan('')
+    setKueriAsal('')
+    setBukaTujuan(false)
+    setBukaAsal(false)
+    setModeAsal('menu')
+    setStatusGps(STATUS_GPS_KOSONG)
+    setPilihPeta(null)
+    setPesanBagikan('')
+    setResetPeta((v) => v + 1)
   }
 
   const pakaiGps = async () => {
@@ -222,6 +243,7 @@ function Peta() {
   }
 
   const klikPeta = (id) => {
+    setPanelTersembunyi(false)
     if (pilihPeta === 'asal') {
       setPilihPeta(null)
       setAsalTempat(id)
@@ -240,7 +262,7 @@ function Peta() {
     setPanel('min')
   }
 
-  const kunciRuteAtur = rute?.found ? `${rute.startId}-${rute.targetId}` : asalGps ? 'gps' : 'kosong'
+  const kunciRuteAtur = rute?.found ? `${rute.startId}-${rute.targetId}` : asalGps ? 'gps' : `kosong-${resetPeta}`
   const tempatDetail = detail ? indeks.byId.get(detail) : null
 
   const mulaiSentuh = (e) => { awalSentuh.current = e.touches[0].clientY }
@@ -256,7 +278,7 @@ function Peta() {
     <div className="flex h-dvh flex-col md:flex-row">
       <aside
         aria-label="Panel pencarian dan rute"
-        className={`order-2 flex w-full flex-none flex-col rounded-t-2xl bg-white shadow-[0_-4px_16px_rgba(0,0,0,0.18)] transition-[height] duration-300 md:order-1 md:h-full md:w-[26rem] md:rounded-none md:shadow-xl ${TINGGI_PANEL[panel]}`}
+        className={`order-2 flex w-full flex-none flex-col rounded-t-2xl bg-white shadow-[0_-4px_16px_rgba(0,0,0,0.18)] transition-[height] duration-300 md:order-1 md:h-full md:w-[26rem] md:rounded-none md:shadow-xl ${TINGGI_PANEL[panel]} ${panelTersembunyi ? 'md:hidden' : ''}`}
         onFocusCapture={(e) => e.target.tagName === 'INPUT' && setPanel('max')}
       >
         <button type="button" className="flex-none px-4 pb-1 pt-2 md:hidden" onClick={() => geserPanel(panel === 'max' ? -2 : 1)} onTouchStart={mulaiSentuh} onTouchEnd={akhirSentuh} aria-label={panel === 'max' ? 'Perkecil panel' : 'Perbesar panel'}>
@@ -312,6 +334,7 @@ function Peta() {
                 statusGps={statusGps}
                 onPilihDiPeta={() => mulaiPilihDiPeta('asal')}
                 onTukar={tukar}
+                onBersihkan={bersihkanRute}
               />
 
               {!tujuan && !kueriTujuan.trim() && (
@@ -343,7 +366,19 @@ function Peta() {
               )}
 
               {rute && tujuan && asal && !bukaTujuan && (
-                <KartuRute rute={rute} ruteTanpaAturan={ruteTanpaAturan} aturan={aturanJalur} langkah={langkah} tujuan={tujuan} asal={asal} indeks={indeks} graphData={graphData} onBagikan={bagikan} pesanBagikan={pesanBagikan} />
+                <KartuRute
+                  rute={rute}
+                  ruteTanpaAturan={ruteTanpaAturan}
+                  aturan={aturanJalur}
+                  langkah={langkah}
+                  tujuan={tujuan}
+                  asal={asal}
+                  indeks={indeks}
+                  graphData={graphData}
+                  onBagikan={bagikan}
+                  pesanBagikan={pesanBagikan}
+                  onBersihkan={bersihkanRute}
+                />
               )}
             </div>
           )}
@@ -384,6 +419,16 @@ function Peta() {
       </aside>
 
       <main className="relative order-1 min-h-0 flex-1 md:order-2" aria-label="Peta">
+        <button
+          type="button"
+          onClick={() => setPanelTersembunyi((v) => !v)}
+          aria-label={panelTersembunyi ? 'Tampilkan panel kiri' : 'Sembunyikan panel kiri'}
+          title={panelTersembunyi ? 'Tampilkan panel' : 'Sembunyikan panel'}
+          className="hidden md:flex absolute left-0 top-1/2 z-[1000] -translate-y-1/2 items-center justify-center rounded-r-xl border border-l-0 border-slate-200 bg-white/95 px-1.5 py-4 text-slate-700 shadow-md backdrop-blur-xs transition-colors hover:bg-emerald-50 hover:text-emerald-900"
+        >
+          <IkonPanah ukuran={18} className={`transition-transform duration-200 ${panelTersembunyi ? '' : 'rotate-180'}`} />
+        </button>
+
         <MapView
           bentuk={bentuk}
           batas={batas}

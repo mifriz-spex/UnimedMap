@@ -1,9 +1,9 @@
 /**
- * Modul pemetaan foto gedung dan fasilitas kawasan FMIPA Unimed.
- * Memetakan berkas WebP di src/assets/foto/ ke ID tempat.
+ * Modul pemetaan foto gedung dan fasilitas kawasan Unimed.
+ * Memetakan berkas WebP di src/assets/ (seperti src/assets/fmipa/) ke ID tempat.
  */
 
-const fotoModules = import.meta.glob('../assets/foto/*.webp', { eager: true, import: 'default' })
+const fotoModules = import.meta.glob('../assets/**/*.webp', { eager: true, import: 'default' })
 
 const FOTO_TEMPAT = {}
 
@@ -21,7 +21,8 @@ for (const [path, url] of Object.entries(fotoModules)) {
  */
 export function ambilFotoTempat(tempatId) {
   if (!tempatId) return null
-  return FOTO_TEMPAT[tempatId] || null
+  const bersih = String(tempatId).replace(/^gedung-/, '')
+  return FOTO_TEMPAT[tempatId] || FOTO_TEMPAT[bersih] || null
 }
 
 /**
@@ -30,7 +31,7 @@ export function ambilFotoTempat(tempatId) {
  * @returns {boolean}
  */
 export function adaFotoTempat(tempatId) {
-  return Boolean(FOTO_TEMPAT[tempatId])
+  return Boolean(ambilFotoTempat(tempatId))
 }
 
 export { FOTO_TEMPAT }

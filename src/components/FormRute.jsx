@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import HasilPencarian from './HasilPencarian'
-import { IkonCari, IkonKembali, IkonLokasi, IkonPeta, IkonTukar } from './Ikon'
+import { IkonCari, IkonHapus, IkonKembali, IkonLokasi, IkonPeta, IkonTukar } from './Ikon'
 import { kapital, teksLantai } from '../lib/format'
 
 const inputKelas = 'w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-3 text-base text-slate-900 placeholder:text-slate-500 focus:border-emerald-600'
@@ -62,7 +62,7 @@ export default function FormRute({
   kueriTujuan, setKueriTujuan, kueriAsal, setKueriAsal,
   hasilTujuan, hasilAsal, namaTempat, adaJarak,
   onPilihTujuanTempat, onPilihTujuanRuangan, onPilihAsalTempat, onPilihAsalRuangan,
-  onUbahTujuan, onBatalUbahTujuan, onUbahAsal, onBatalUbahAsal, onGps, statusGps, onPilihDiPeta, onTukar,
+  onUbahTujuan, onBatalUbahTujuan, onUbahAsal, onBatalUbahAsal, onGps, statusGps, onPilihDiPeta, onTukar, onBersihkan,
 }) {
   const refAsal = useRef(null)
   const pilihPertama = (hasil, pilihTempat, pilihRuangan) => () => {
@@ -72,24 +72,58 @@ export default function FormRute({
 
   const tampilTujuan = Boolean(tujuan) && !bukaTujuan
   const tampilAsal = Boolean(asal) && !bukaAsal
+  const bisaBersihkan = Boolean(onBersihkan && (tujuan || asal || kueriTujuan.trim() || kueriAsal.trim()))
 
   return (
     <section aria-label="Pilih tujuan dan titik awal" className="space-y-3">
       {/* ---- TUJUAN ---- */}
       <div className="space-y-2">
         {tampilTujuan ? (
-          <KartuPilihan
-            judul="B"
-            warna="bg-red-600"
-            utama={tujuan.ruangan ? tujuan.ruangan.nama : tujuan.tempat.nama}
-            tambahan={tujuan.ruangan ? `${tujuan.tempat.nama} · ${teksLantai(tujuan.ruangan.lantai)}` : 'Tujuan'}
-            onUbah={onUbahTujuan}
-          />
-        ) : (
           <>
             <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">Rute perjalanan</span>
+              {bisaBersihkan && (
+                <button
+                  type="button"
+                  onClick={onBersihkan}
+                  aria-label="Bersihkan rute"
+                  title="Bersihkan rute"
+                  className="inline-flex items-center justify-center rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-700"
+                >
+                  <IkonHapus ukuran={17} />
+                </button>
+              )}
+            </div>
+            <KartuPilihan
+              judul="B"
+              warna="bg-red-600"
+              utama={tujuan.ruangan ? tujuan.ruangan.nama : tujuan.tempat.nama}
+              tambahan={tujuan.ruangan ? `${tujuan.tempat.nama} · ${teksLantai(tujuan.ruangan.lantai)}` : 'Tujuan'}
+              onUbah={onUbahTujuan}
+            />
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-between gap-2">
               <h2 className="text-lg font-bold text-slate-900">Mau ke mana?</h2>
-              {tujuan && <button type="button" onClick={onBatalUbahTujuan} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Batal</button>}
+              <div className="flex items-center gap-1">
+                {tujuan && (
+                  <button type="button" onClick={onBatalUbahTujuan} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">
+                    Batal
+                  </button>
+                )}
+                {bisaBersihkan && (
+                  <button
+                    type="button"
+                    onClick={onBersihkan}
+                    aria-label="Bersihkan rute"
+                    title="Bersihkan rute"
+                    className="inline-flex items-center justify-center rounded-lg p-2 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-700"
+                  >
+                    <IkonHapus ukuran={18} />
+                  </button>
+                )}
+              </div>
             </div>
             <KotakCari
               id="cari-tujuan"

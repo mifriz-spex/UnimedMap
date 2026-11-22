@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react'
-import { IkonBagikan, IkonInfo } from './Ikon'
+import { IkonBagikan, IkonGedung, IkonHapus, IkonInfo } from './Ikon'
 import { formatJarak, KECEPATAN_JALAN, teksLantai, teksMenit } from '../lib/format'
 import { validasiSemuaTempat } from '../lib/routing'
 import { namaTitik } from '../lib/places'
+import { KELOMPOK } from '../lib/peta'
 import { tentukanNavigasiLantai } from '../lib/navigasiLantai'
 import { ambilFotoTempat } from '../lib/foto'
 
@@ -48,7 +49,7 @@ function Perbandingan({ rute, graphData, indeks, aturan }) {
   )
 }
 
-export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tujuan, asal, indeks, graphData, onBagikan, pesanBagikan }) {
+export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tujuan, asal, indeks, graphData, onBagikan, pesanBagikan, onBersihkan }) {
   const aturanBerpengaruh = useMemo(() => {
     if (!rute || !rute.found || !ruteTanpaAturan || !ruteTanpaAturan.found || !aturan) return []
 
@@ -96,6 +97,8 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
   const namaTujuan = tujuan.tempat.nama
   const navigasiLantai = tentukanNavigasiLantai(asal, tujuan)
   const fotoTujuan = tujuan?.tempat?.id ? ambilFotoTempat(tujuan.tempat.id) : null
+  const warnaKelompok = KELOMPOK[tujuan.tempat.kelompok]?.warna || '#047857'
+  const labelKelompok = tujuan.tempat.fakultas || KELOMPOK[tujuan.tempat.kelompok]?.nama || 'Gedung Kampus'
 
   return (
     <section aria-label="Hasil rute" className="space-y-4">
@@ -194,17 +197,43 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         </div>
       )}
 
-      {fotoTujuan && (
+      {fotoTujuan ? (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-xs">
           <div className="relative aspect-[4/3] w-full">
             <img
               src={fotoTujuan}
-              alt={`Foto ${tujuan.tempat.nama}`}
+              alt={`Foto ${namaTujuan}`}
               loading="lazy"
               className="h-full w-full object-cover"
             />
           </div>
-          <p className="px-3 py-2 text-xs font-medium text-slate-700">Tampak {tujuan.tempat.nama}</p>
+          <p className="px-3 py-2 text-xs font-medium text-slate-700">
+            Tampak {namaTujuan}
+            {tujuan.ruangan ? ` · ${tujuan.ruangan.nama} (${teksLantai(tujuan.ruangan.lantai)})` : ''}
+          </p>
+        </div>
+      ) : (
+        <div
+          className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3.5 py-3"
+          role="img"
+          aria-label={`Ilustrasi gedung ${namaTujuan}`}
+        >
+          <span
+            className="flex h-11 w-11 flex-none items-center justify-center rounded-xl border"
+            style={{
+              backgroundColor: `${warnaKelompok}18`,
+              borderColor: `${warnaKelompok}45`,
+              color: warnaKelompok,
+            }}
+          >
+            <IkonGedung ukuran={22} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-slate-900">{namaTujuan}</p>
+            <p className="text-xs text-slate-600">
+              {labelKelompok} · Foto gedung belum tersedia
+            </p>
+          </div>
         </div>
       )}
 
@@ -236,6 +265,17 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         >
           <IkonBagikan ukuran={18} /> Bagikan rute
         </button>
+        {onBersihkan && (
+          <button
+            type="button"
+            onClick={onBersihkan}
+            aria-label="Bersihkan rute"
+            title="Bersihkan rute"
+            className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white p-2.5 text-slate-600 transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+          >
+            <IkonHapus ukuran={18} />
+          </button>
+        )}
         {pesanBagikan && (
           <span role="status" className="text-sm font-medium text-emerald-800">
             {pesanBagikan}
