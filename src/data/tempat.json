@@ -179,27 +179,6 @@
     "poligon": null
   },
   {
-    "id": "lab-komputer",
-    "nama": "Lab. Komputer",
-    "label": "Lab. Komputer",
-    "kelompok": "lab",
-    "fakultas": "FMIPA",
-    "alias": [
-      "laboratorium komputer fmipa",
-      "pusat komputer fmipa"
-    ],
-    "gedung": [
-      {
-        "kode": "009",
-        "lantai": 3
-      }
-    ],
-    "titik": [
-      10
-    ],
-    "poligon": null
-  },
-  {
     "id": "lab-biologi",
     "nama": "Lab. Biologi",
     "label": "Lab. Biologi",
@@ -248,55 +227,19 @@
     "poligon": null
   },
   {
-    "id": "rumah-kaca",
-    "nama": "Rumah Kaca",
-    "label": "Rumah Kaca",
-    "kelompok": "taman",
+    "id": "lab-biologi-lama",
+    "nama": "Lab. Biologi Lama",
+    "label": "Lab. Biologi Lama",
+    "kelompok": "lab",
     "fakultas": "FMIPA",
     "alias": [
-      "greenhouse",
-      "green house fmipa",
-      "taman",
-      "fmipa"
-    ],
-    "gedung": [],
-    "titik": [
-      18
-    ],
-    "poligon": null
-  },
-  {
-    "id": "rumah-hewan",
-    "nama": "Rumah Hewan FMIPA",
-    "label": "Rumah Hewan",
-    "kelompok": "lainnya",
-    "fakultas": "FMIPA",
-    "alias": [
-      "kandang hewan",
-      "hewan uji biologi",
-      "animal house",
+      "laboratorium biologi lama",
+      "lab biologi lama fmipa",
       "fmipa"
     ],
     "gedung": [],
     "titik": [
       15
-    ],
-    "poligon": null
-  },
-  {
-    "id": "taman-biologi",
-    "nama": "Taman Biologi",
-    "label": "Taman Biologi",
-    "kelompok": "taman",
-    "fakultas": "FMIPA",
-    "alias": [
-      "taman fmipa",
-      "area hijau biologi",
-      "taman"
-    ],
-    "gedung": [],
-    "titik": [
-      17
     ],
     "poligon": null
   },
@@ -349,7 +292,7 @@
     ],
     "gedung": [],
     "titik": [
-      126
+      129
     ],
     "poligon": null
   },
@@ -367,7 +310,7 @@
     ],
     "gedung": [],
     "titik": [
-      204
+      207
     ],
     "poligon": null
   },
@@ -403,7 +346,7 @@
     ],
     "gedung": [],
     "titik": [
-      235
+      238
     ],
     "poligon": null
   },
@@ -421,7 +364,7 @@
     ],
     "gedung": [],
     "titik": [
-      212
+      215
     ],
     "poligon": null
   },
@@ -439,7 +382,7 @@
     ],
     "gedung": [],
     "titik": [
-      185
+      188
     ],
     "poligon": null
   },
@@ -475,7 +418,7 @@
     ],
     "gedung": [],
     "titik": [
-      120
+      123
     ],
     "poligon": null
   },
@@ -493,21 +436,21 @@
     ],
     "gedung": [],
     "titik": [
-      254
+      257
     ],
     "poligon": null
   },
   {
     "id": "gedung-33-fik",
     "fid": 22,
-    "nama": "Gedung 33 FIK",
-    "label": "33 FIK",
+    "nama": "Gedung 33 FIKK",
+    "label": "33 FIKK",
     "kelompok": "fik",
-    "fakultas": "FIK",
+    "fakultas": "FIKK",
     "alias": [
       "Gedung 33 fik",
-      "gedung 33 fik",
-      "fik"
+      "gedung 33 fikk",
+      "fikk"
     ],
     "gedung": [],
     "titik": [
@@ -518,14 +461,14 @@
   {
     "id": "gedung-31-fik",
     "fid": 23,
-    "nama": "Gedung 31 FIK",
-    "label": "31 FIK",
+    "nama": "Gedung 31 FIKK",
+    "label": "31 FIKK",
     "kelompok": "fik",
-    "fakultas": "FIK",
+    "fakultas": "FIKK",
     "alias": [
       "Gedung 31 fik",
-      "gedung 31 fik",
-      "fik"
+      "gedung 31 fikk",
+      "fikk"
     ],
     "gedung": [],
     "titik": [
@@ -536,14 +479,14 @@
   {
     "id": "gedung-32-fik",
     "fid": 24,
-    "nama": "Gedung 32 FIK",
-    "label": "32 FIK",
+    "nama": "Gedung 32 FIKK",
+    "label": "32 FIKK",
     "kelompok": "fik",
-    "fakultas": "FIK",
+    "fakultas": "FIKK",
     "alias": [
       "Gedung 32 fik",
-      "gedung 32 fik",
-      "fik"
+      "gedung 32 fikk",
+      "fikk"
     ],
     "gedung": [],
     "titik": [
@@ -565,7 +508,7 @@
     ],
     "gedung": [],
     "titik": [
-      195
+      198
     ],
     "poligon": null
   },
@@ -745,7 +688,7 @@
     ],
     "gedung": [],
     "titik": [
-      250
+      253
     ],
     "poligon": null
   },
@@ -763,7 +706,7 @@
     ],
     "gedung": [],
     "titik": [
-      248
+      251
     ],
     "poligon": null
   },
@@ -781,7 +724,7 @@
     ],
     "gedung": [],
     "titik": [
-      246
+      249
     ],
     "poligon": null
   },
@@ -799,7 +742,7 @@
     ],
     "gedung": [],
     "titik": [
-      226
+      229
     ],
     "poligon": null
   },
@@ -817,7 +760,7 @@
     ],
     "gedung": [],
     "titik": [
-      228
+      231
     ],
     "poligon": null
   },
@@ -835,7 +778,7 @@
     ],
     "gedung": [],
     "titik": [
-      215
+      218
     ],
     "poligon": null
   },
@@ -871,7 +814,7 @@
     ],
     "gedung": [],
     "titik": [
-      135
+      138
     ],
     "poligon": null
   },
@@ -889,7 +832,7 @@
     ],
     "gedung": [],
     "titik": [
-      136
+      139
     ],
     "poligon": null
   },
@@ -907,7 +850,7 @@
     ],
     "gedung": [],
     "titik": [
-      155
+      158
     ],
     "poligon": null
   },
@@ -925,7 +868,7 @@
     ],
     "gedung": [],
     "titik": [
-      148
+      151
     ],
     "poligon": null
   },
@@ -943,7 +886,7 @@
     ],
     "gedung": [],
     "titik": [
-      165
+      168
     ],
     "poligon": null
   },
@@ -1092,24 +1035,6 @@
     "poligon": null
   },
   {
-    "id": "gedung-lab-biologi-lama",
-    "fid": 56,
-    "nama": "Gedung Lab Biologi Lama",
-    "label": "Lab Biologi Lama",
-    "kelompok": "fmipa",
-    "fakultas": "FMIPA",
-    "alias": [
-      "Gedung Lab Biologi Lama",
-      "gedung lab biologi lama",
-      "fmipa"
-    ],
-    "gedung": [],
-    "titik": [
-      15
-    ],
-    "poligon": null
-  },
-  {
     "id": "rusunawa",
     "fid": 59,
     "nama": "Rusunawa",
@@ -1123,7 +1048,7 @@
     ],
     "gedung": [],
     "titik": [
-      253
+      256
     ],
     "poligon": null
   },
@@ -1141,7 +1066,7 @@
     ],
     "gedung": [],
     "titik": [
-      240
+      243
     ],
     "poligon": null
   },
@@ -1159,7 +1084,7 @@
     ],
     "gedung": [],
     "titik": [
-      239
+      242
     ],
     "poligon": null
   },
@@ -1177,7 +1102,7 @@
     ],
     "gedung": [],
     "titik": [
-      233
+      236
     ],
     "poligon": null
   },
@@ -1195,7 +1120,7 @@
     ],
     "gedung": [],
     "titik": [
-      209
+      212
     ],
     "poligon": null
   },
@@ -1231,7 +1156,7 @@
     ],
     "gedung": [],
     "titik": [
-      127
+      130
     ],
     "poligon": null
   },
@@ -1249,7 +1174,7 @@
     ],
     "gedung": [],
     "titik": [
-      144
+      147
     ],
     "poligon": null
   },
@@ -1285,7 +1210,7 @@
     ],
     "gedung": [],
     "titik": [
-      174
+      177
     ],
     "poligon": null
   },
@@ -1303,7 +1228,7 @@
     ],
     "gedung": [],
     "titik": [
-      189
+      192
     ],
     "poligon": null
   },
@@ -1321,7 +1246,7 @@
     ],
     "gedung": [],
     "titik": [
-      213
+      216
     ],
     "poligon": null
   },
@@ -1339,7 +1264,7 @@
     ],
     "gedung": [],
     "titik": [
-      214
+      217
     ],
     "poligon": null
   },
@@ -1349,15 +1274,15 @@
     "nama": "Stadion Pentaque",
     "label": "Stadion Pentaque",
     "kelompok": "fik",
-    "fakultas": "FIK",
+    "fakultas": "FIKK",
     "alias": [
       "stadion pentaque",
       "stadion pentaque",
-      "fik"
+      "fikk"
     ],
     "gedung": [],
     "titik": [
-      224
+      227
     ],
     "poligon": null
   },
@@ -1375,7 +1300,7 @@
     ],
     "gedung": [],
     "titik": [
-      230
+      233
     ],
     "poligon": null
   }

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { batas, bentuk, edges, graphData, poligon, tempat, ruanganLokal } from './data'
 import aturanJalur from './data/aturanJalur.json'
 import { useRuangan } from './hooks/useRuangan'
@@ -9,6 +9,7 @@ import { geometriRute, hitungRute, jarakKeSemuaTempat, langkahRute } from './lib
 import { cariRuanganDariKunci, kunciRuangan } from './lib/rooms'
 import { bangunIndeksTempat, ringkasOrientasi } from './lib/places'
 import { bacaUrl, tulisUrl } from './lib/urlState'
+import CardGedung from './components/CardGedung'
 import DetailTempat from './components/DetailTempat'
 import FormRute from './components/FormRute'
 import { IkonBantuan, IkonBawah, IkonPanah } from './components/Ikon'
@@ -17,7 +18,6 @@ import KartuRute from './components/KartuRute'
 import MapView from './components/MapView'
 import Panduan from './components/Panduan'
 
-const AdminPage = lazy(() => import('./components/AdminPage'))
 const KUNCI_PANDUAN = 'unimed_panduan_dilihat'
 const TINGGI_PANEL = { min: 'h-[12rem]', mid: 'h-[56dvh]', max: 'h-[90dvh]' }
 const URUTAN_PANEL = ['min', 'mid', 'max']
@@ -44,12 +44,13 @@ function keadaanAwal() {
   return { dari, ke, ruang: ruang && ruang.tempatId === ke ? ruang : null }
 }
 
-function Peta() {
+export default function App() {
   const [awal] = useState(keadaanAwal)
-  const { ruangan: daftarRuangan, sumber, galat: galatData } = useRuangan()
+  const { ruangan: daftarRuangan, galat: galatData } = useRuangan()
 
   const [tab, setTab] = useState('rute')
   const [detail, setDetail] = useState(null)
+  const [gedungPratinjau, setGedungPratinjau] = useState(null)
   const [dari, setDari] = useState(awal.dari)
   const [asalGps, setAsalGps] = useState(null)
   const [posisiPengguna, setPosisiPengguna] = useState(null)
@@ -135,7 +136,7 @@ function Peta() {
     try {
       window.localStorage.setItem(KUNCI_PANDUAN, '1')
     } catch {
-      /* penyimpanan tidak tersedia: panduan akan muncul lagi, tidak apa-apa */
+      /* penyimpanan tidak tersedia */
     }
     setPanduan(false)
   }, [])
@@ -148,6 +149,7 @@ function Peta() {
     setPesanBagikan('')
     setTab('rute')
     setDetail(null)
+    setGedungPratinjau(null)
     setPanel('mid')
     setPanelTersembunyi(false)
   }
@@ -162,6 +164,7 @@ function Peta() {
     setPesanBagikan('')
     setTab('rute')
     setDetail(null)
+    setGedungPratinjau(null)
     setPanel('mid')
     setPanelTersembunyi(false)
   }
@@ -179,6 +182,7 @@ function Peta() {
     setModeAsal('menu')
     setStatusGps(STATUS_GPS_KOSONG)
     setPilihPeta(null)
+    setGedungPratinjau(null)
     setPesanBagikan('')
     setResetPeta((v) => v + 1)
   }
@@ -243,17 +247,17 @@ function Peta() {
   }
 
   const klikPeta = (id) => {
-    setPanelTersembunyi(false)
     if (pilihPeta === 'asal') {
+      setPanelTersembunyi(false)
       setPilihPeta(null)
       setAsalTempat(id)
     } else if (pilihPeta === 'tujuan') {
+      setPanelTersembunyi(false)
       setPilihPeta(null)
       setTujuanTempat(id)
     } else {
-      setDetail(id)
-      setTab('jelajah')
-      setPanel('mid')
+      setGedungPratinjau(id)
+      setPanel('min')
     }
   }
 
@@ -264,6 +268,11 @@ function Peta() {
 
   const kunciRuteAtur = rute?.found ? `${rute.startId}-${rute.targetId}` : asalGps ? 'gps' : `kosong-${resetPeta}`
   const tempatDetail = detail ? indeks.byId.get(detail) : null
+  const tempatPratinjau = gedungPratinjau ? indeks.byId.get(gedungPratinjau) : null
+  const jumlahRuanganPratinjau = useMemo(
+    () => (gedungPratinjau ? daftarRuangan.filter((r) => r.tempatId === gedungPratinjau).length : 0),
+    [gedungPratinjau, daftarRuangan]
+  )
 
   const mulaiSentuh = (e) => { awalSentuh.current = e.touches[0].clientY }
   const akhirSentuh = (e) => {
@@ -409,11 +418,10 @@ function Peta() {
             )
           )}
 
-          <footer className="mt-8 space-y-2 border-t border-slate-200 pt-4 text-xs text-slate-600">
+          <footer className="mt-8 border-t border-slate-200 pt-4 text-xs text-slate-600">
             <p>
-              Peta jalur digambar manual dan perkiraan jarak bisa berbeda di lapangan. Data ruangan: {sumber === 'supabase' ? 'database kampus' : 'berkas bawaan'}.
+              Peta jalur digambar manual dan perkiraan jarak bisa berbeda di lapangan. Data ruangan menggunakan berkas bawaan aplikasi.
             </p>
-            <p><a href="#/admin" className="underline hover:text-slate-900">Masuk admin</a></p>
           </footer>
         </div>
       </aside>
@@ -441,37 +449,32 @@ function Peta() {
           asal={asal && { ...asal, titikId: rute?.found ? rute.startId : titikAsal[0], tempatId: asal.tempat?.id }}
           tujuan={rute?.found ? rute.targetId : null}
           tujuanTempatId={rute?.found ? ke : null}
-          terpilih={tempatDetail?.id}
+          terpilih={tempatDetail?.id || tempatPratinjau?.id}
           posisiPengguna={posisiPengguna}
           pilihPeta={pilihPeta}
           onPilihTempat={klikPeta}
           onBatalPilih={() => { setPilihPeta(null); setPanel('mid') }}
         />
+
+        {tempatPratinjau && !pilihPeta && (
+          <CardGedung
+            tempat={tempatPratinjau}
+            jumlahRuangan={jumlahRuanganPratinjau}
+            onTutup={() => setGedungPratinjau(null)}
+            onRuteKe={(id) => setTujuanTempat(id)}
+            onRuteDari={(id) => setAsalTempat(id)}
+            onBukaDetail={(id) => {
+              setGedungPratinjau(null)
+              setDetail(id)
+              setTab('jelajah')
+              setPanel('mid')
+              setPanelTersembunyi(false)
+            }}
+          />
+        )}
       </main>
 
       {panduan && <Panduan onTutup={tutupPanduan} onJelajahi={() => { tutupPanduan(); setTab('jelajah') }} />}
     </div>
   )
-}
-
-function useHash() {
-  const [hash, setHash] = useState(() => window.location.hash)
-  useEffect(() => {
-    const ubah = () => setHash(window.location.hash)
-    window.addEventListener('hashchange', ubah)
-    return () => window.removeEventListener('hashchange', ubah)
-  }, [])
-  return hash
-}
-
-export default function App() {
-  const hash = useHash()
-  if (hash.startsWith('#/admin')) {
-    return (
-      <Suspense fallback={<p className="p-6 text-slate-700">Memuat halaman admin…</p>}>
-        <AdminPage />
-      </Suspense>
-    )
-  }
-  return <Peta />
 }

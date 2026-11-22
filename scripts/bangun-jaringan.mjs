@@ -90,8 +90,8 @@ function klasifikasiFakultas(rawName) {
   if (/\b(fis)\b/.test(s)) {
     return { fakultas: 'FIS', kelompok: 'fis' }
   }
-  if (/\b(fik|pentaque)\b/.test(s)) {
-    return { fakultas: 'FIK', kelompok: 'fik' }
+  if (/\b(fikk|fik|pentaque)\b/.test(s)) {
+    return { fakultas: 'FIKK', kelompok: 'fik' }
   }
   if (/\b(feb|fe)\b/.test(s)) {
     return { fakultas: 'FE', kelompok: 'fe' }
@@ -113,10 +113,11 @@ function formatNamaTempat(rawName) {
   return rawName
     .replace(/_/g, ' ')
     .replace(/\bfimpa\b/gi, 'FMIPA')
+    .replace(/\bfik\b/gi, 'FIKK')
     .split(' ')
     .map((w) => {
       const up = w.toUpperCase()
-      if (['FMIPA', 'FT', 'FBS', 'FIS', 'FIK', 'FE', 'FEB', 'FIP', 'FK', 'UPT', 'PUSKOM', 'LPPM', 'PKK'].includes(up)) {
+      if (['FMIPA', 'FT', 'FBS', 'FIS', 'FIK', 'FIKK', 'FE', 'FEB', 'FIP', 'FK', 'UPT', 'PUSKOM', 'LPPM', 'PKK'].includes(up)) {
         return up
       }
       return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
@@ -335,9 +336,6 @@ function prosesJaringan(rawSurvei, rawLokasi) {
   const fid9 = rawLokasi.features.find((f) => f.properties.fid === 9)
   assignSpecificNode(9, toLocalMeters(fid9.geometry.coordinates))
 
-  // Lab Komputer = 10 (simpul dekat Lab Komputer)
-  assignSpecificNode(10, toLocalMeters([98.71429727489695, 3.606955381749354]))
-
   // Lab Biologi = 11 (fid 57)
   const fid57 = rawLokasi.features.find((f) => f.properties.fid === 57)
   assignSpecificNode(11, toLocalMeters(fid57.geometry.coordinates))
@@ -361,12 +359,6 @@ function prosesJaringan(rawSurvei, rawLokasi) {
   // Serbaguna Taman = 16
   assignSpecificNode(16, toLocalMeters([98.71354662352458, 3.606879661883678]))
 
-  // Taman Biologi = 17
-  assignSpecificNode(17, toLocalMeters([98.71353285841371, 3.607058476642107]))
-
-  // Rumah Kaca = 18 (ujung buntu fid 123)
-  assignSpecificNode(18, toLocalMeters([98.7152669452866, 3.606964677911732]))
-
   // Alokasikan sisa vertex ke ID 19 dst.
   let nextId = 19
   for (let vIdx = 0; vIdx < rawNodes.length; vIdx += 1) {
@@ -376,9 +368,10 @@ function prosesJaringan(rawSurvei, rawLokasi) {
     nextId += 1
   }
 
-  // Buat array simpul awal terurut berdasarkan ID
+  // Buat array simpul awal terurut berdasarkan ID yang terpakai
   const initialNodes = []
-  for (let id = 1; id <= assignedVertexForNodeId.size; id += 1) {
+  const sortedNodeIds = [...assignedVertexForNodeId.keys()].sort((a, b) => a - b)
+  for (const id of sortedNodeIds) {
     const vIdx = assignedVertexForNodeId.get(id)
     const m = rawNodes[vIdx]
     initialNodes.push({
@@ -403,7 +396,6 @@ function prosesJaringan(rawSurvei, rawLokasi) {
       if (!exists) {
         const uNode = initialNodes.find((n) => n.id === u)
         const vNode = initialNodes.find((n) => n.id === v)
-        // Koordinat lengkap dari awal sampai akhir ruas (mempertahankan kelokan)
         const polyCoords = line.coordsM.map((m, idx) => {
           if (idx === 0) return uNode.coord
           if (idx === line.coordsM.length - 1) return vNode.coord
@@ -424,7 +416,7 @@ function prosesJaringan(rawSurvei, rawLokasi) {
   }
 
   // 7. Kontraksi simpul derajat 2 non-tempat (menyederhanakan kelokan menjadi polyline geometris)
-  const tempatNodeIds = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
+  const tempatNodeIds = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16])
   for (const f of rawLokasi.features) {
     const ptM = toLocalMeters(f.geometry.coordinates)
     let minD = Infinity
@@ -441,7 +433,6 @@ function prosesJaringan(rawSurvei, rawLokasi) {
 
   let nodesMap = new Map(initialNodes.map((n) => [n.id, n]))
   let contracted = true
-  let contractedCount = 0
 
   while (contracted) {
     contracted = false
@@ -480,7 +471,6 @@ function prosesJaringan(rawSurvei, rawLokasi) {
             })
 
             nodesMap.delete(nodeId)
-            contractedCount += 1
             contracted = true
             break
           }
@@ -517,7 +507,7 @@ function prosesJaringan(rawSurvei, rawLokasi) {
     })
   }
 
-  // 8. Bentuk daftar tempat (tempat.json)
+  // 9. Bentuk daftar tempat (tempat.json) tanpa titik duplikat lama
   const tempatList = [
     {
       id: 'syawal',
@@ -615,17 +605,6 @@ function prosesJaringan(rawSurvei, rawLokasi) {
       poligon: null,
     },
     {
-      id: 'lab-komputer',
-      nama: 'Lab. Komputer',
-      label: 'Lab. Komputer',
-      kelompok: 'lab',
-      fakultas: 'FMIPA',
-      alias: ['laboratorium komputer fmipa', 'pusat komputer fmipa'],
-      gedung: [{ kode: '009', lantai: 3 }],
-      titik: [10],
-      poligon: null,
-    },
-    {
       id: 'lab-biologi',
       nama: 'Lab. Biologi',
       label: 'Lab. Biologi',
@@ -649,36 +628,15 @@ function prosesJaringan(rawSurvei, rawLokasi) {
       poligon: null,
     },
     {
-      id: 'rumah-kaca',
-      nama: 'Rumah Kaca',
-      label: 'Rumah Kaca',
-      kelompok: 'taman',
+      id: 'lab-biologi-lama',
+      nama: 'Lab. Biologi Lama',
+      label: 'Lab. Biologi Lama',
+      kelompok: 'lab',
       fakultas: 'FMIPA',
-      alias: ['greenhouse', 'green house fmipa', 'taman', 'fmipa'],
-      gedung: [],
-      titik: [18],
-      poligon: null,
-    },
-    {
-      id: 'rumah-hewan',
-      nama: 'Rumah Hewan FMIPA',
-      label: 'Rumah Hewan',
-      kelompok: 'lainnya',
-      fakultas: 'FMIPA',
-      alias: ['kandang hewan', 'hewan uji biologi', 'animal house', 'fmipa'],
+      alias: ['laboratorium biologi lama', 'lab biologi lama fmipa', 'fmipa'],
       gedung: [],
       titik: [15],
       poligon: null,
-    },
-    {
-      id: 'taman-biologi',
-      nama: 'Taman Biologi',
-      label: 'Taman Biologi',
-      kelompok: 'taman',
-      fakultas: 'FMIPA',
-      alias: ['taman fmipa', 'area hijau biologi', 'taman'],
-      gedung: [],
-      titik: [17],
       poligon: null,
     },
     {
@@ -694,7 +652,7 @@ function prosesJaringan(rawSurvei, rawLokasi) {
     },
   ]
 
-  const handledFids = new Set([2, 3, 4, 5, 6, 9, 10, 14, 57, 58])
+  const handledFids = new Set([2, 3, 4, 5, 6, 9, 10, 14, 56, 57, 58])
   for (const f of rawLokasi.features) {
     const fid = f.properties.fid
     if (handledFids.has(fid)) continue
@@ -727,7 +685,7 @@ function prosesJaringan(rawSurvei, rawLokasi) {
     })
   }
 
-  // 9. Analisis Konektivitas Graf
+  // 10. Analisis Konektivitas Graf
   const adj = {}
   nodes.forEach((n) => {
     adj[n.id] = []
@@ -823,7 +781,6 @@ function main() {
     isEdgeIdUnique,
     laporanSegmenDibuang,
     laporanTNoding,
-    snappingLaporan,
   } = prosesJaringan(rawSurvei, rawLokasi)
 
   console.log('\n--- RINGKASAN TOPOLOGI ---')
@@ -909,7 +866,7 @@ function main() {
     writeFileSync(PATH_EDGES_SRC, JSON.stringify(edgesGeoJson, null, 2), 'utf8')
     console.log(`[BERHASIL] Ditulis: ${PATH_EDGES_SRC}`)
 
-    // 3. gedung_fmipa.geojson (dikosongkan agar tidak error sesuai instruksi Fase 1)
+    // 3. gedung_fmipa.geojson
     const poligonGeoJson = {
       type: 'FeatureCollection',
       name: 'gedung_fmipa',
