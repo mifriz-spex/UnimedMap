@@ -179,6 +179,30 @@
     "poligon": null
   },
   {
+    "id": "lab-matematika-fmipa",
+    "fid": 7,
+    "nama": "Lab. Matematika FMIPA",
+    "label": "Lab. Matematika FMIPA",
+    "kelompok": "lab",
+    "fakultas": "FMIPA",
+    "alias": [
+      "laboratorium matematika fmipa",
+      "lab komputer fmipa",
+      "pusat komputer fmipa",
+      "fmipa"
+    ],
+    "gedung": [
+      {
+        "kode": "009",
+        "lantai": 3
+      }
+    ],
+    "titik": [
+      10
+    ],
+    "poligon": null
+  },
+  {
     "id": "lab-biologi",
     "nama": "Lab. Biologi",
     "label": "Lab. Biologi",
@@ -261,24 +285,6 @@
     "poligon": null
   },
   {
-    "id": "lab-matematika-fmipa",
-    "fid": 7,
-    "nama": "Lab Matematika FMIPA",
-    "label": "Lab Matematika FMIPA",
-    "kelompok": "fmipa",
-    "fakultas": "FMIPA",
-    "alias": [
-      "lab matematika fmipa",
-      "lab matematika fmipa",
-      "fmipa"
-    ],
-    "gedung": [],
-    "titik": [
-      71
-    ],
-    "poligon": null
-  },
-  {
     "id": "gedung-pendidikan-teknik-bangunan-teknik",
     "fid": 8,
     "nama": "Gedung Pendidikan Teknik Bangunan Teknik",
@@ -292,7 +298,7 @@
     ],
     "gedung": [],
     "titik": [
-      129
+      128
     ],
     "poligon": null
   },
@@ -310,7 +316,7 @@
     ],
     "gedung": [],
     "titik": [
-      207
+      206
     ],
     "poligon": null
   },
@@ -346,7 +352,7 @@
     ],
     "gedung": [],
     "titik": [
-      238
+      237
     ],
     "poligon": null
   },
@@ -364,7 +370,7 @@
     ],
     "gedung": [],
     "titik": [
-      215
+      214
     ],
     "poligon": null
   },
@@ -382,7 +388,7 @@
     ],
     "gedung": [],
     "titik": [
-      188
+      187
     ],
     "poligon": null
   },
@@ -418,7 +424,7 @@
     ],
     "gedung": [],
     "titik": [
-      122
+      121
     ],
     "poligon": null
   },
@@ -436,7 +442,7 @@
     ],
     "gedung": [],
     "titik": [
-      257
+      256
     ],
     "poligon": null
   },
@@ -508,7 +514,7 @@
     ],
     "gedung": [],
     "titik": [
-      198
+      197
     ],
     "poligon": null
   },
@@ -688,7 +694,7 @@
     ],
     "gedung": [],
     "titik": [
-      253
+      252
     ],
     "poligon": null
   },
@@ -706,7 +712,7 @@
     ],
     "gedung": [],
     "titik": [
-      251
+      250
     ],
     "poligon": null
   },
@@ -724,7 +730,7 @@
     ],
     "gedung": [],
     "titik": [
-      249
+      248
     ],
     "poligon": null
   },
@@ -742,7 +748,7 @@
     ],
     "gedung": [],
     "titik": [
-      229
+      228
     ],
     "poligon": null
   },
@@ -760,7 +766,7 @@
     ],
     "gedung": [],
     "titik": [
-      231
+      230
     ],
     "poligon": null
   },
@@ -778,7 +784,7 @@
     ],
     "gedung": [],
     "titik": [
-      218
+      217
     ],
     "poligon": null
   },
@@ -814,7 +820,7 @@
     ],
     "gedung": [],
     "titik": [
-      138
+      137
     ],
     "poligon": null
   },
@@ -832,7 +838,7 @@
     ],
     "gedung": [],
     "titik": [
-      139
+      138
     ],
     "poligon": null
   },
@@ -850,7 +856,7 @@
     ],
     "gedung": [],
     "titik": [
-      158
+      157
     ],
     "poligon": null
   },
@@ -868,7 +874,7 @@
     ],
     "gedung": [],
     "titik": [
-      151
+      150
     ],
     "poligon": null
   },
@@ -886,7 +892,7 @@
     ],
     "gedung": [],
     "titik": [
-      168
+      167
     ],
     "poligon": null
   },
@@ -1048,7 +1054,7 @@
     ],
     "gedung": [],
     "titik": [
-      256
+      255
     ],
     "poligon": null
   },
@@ -1066,7 +1072,7 @@
     ],
     "gedung": [],
     "titik": [
-      243
+      242
     ],
     "poligon": null
   },
@@ -1084,7 +1090,7 @@
     ],
     "gedung": [],
     "titik": [
-      242
+      241
     ],
     "poligon": null
   },
@@ -1102,7 +1108,7 @@
     ],
     "gedung": [],
     "titik": [
-      236
+      235
     ],
     "poligon": null
   },
@@ -1120,7 +1126,7 @@
     ],
     "gedung": [],
     "titik": [
-      212
+      211
     ],
     "poligon": null
   },
@@ -1156,7 +1162,7 @@
     ],
     "gedung": [],
     "titik": [
-      130
+      129
     ],
     "poligon": null
   },
@@ -1174,7 +1180,7 @@
     ],
     "gedung": [],
     "titik": [
-      147
+      146
     ],
     "poligon": null
   },
@@ -1210,7 +1216,7 @@
     ],
     "gedung": [],
     "titik": [
-      177
+      176
     ],
     "poligon": null
   },
@@ -1228,7 +1234,7 @@
     ],
     "gedung": [],
     "titik": [
-      192
+      191
     ],
     "poligon": null
   },
@@ -1246,7 +1252,7 @@
     ],
     "gedung": [],
     "titik": [
-      216
+      215
     ],
     "poligon": null
   },
@@ -1264,7 +1270,7 @@
     ],
     "gedung": [],
     "titik": [
-      217
+      216
     ],
     "poligon": null
   },
@@ -1282,7 +1288,7 @@
     ],
     "gedung": [],
     "titik": [
-      227
+      226
     ],
     "poligon": null
   },
@@ -1300,7 +1306,7 @@
     ],
     "gedung": [],
     "titik": [
-      233
+      232
     ],
     "poligon": null
   }

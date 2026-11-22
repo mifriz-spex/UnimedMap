@@ -336,6 +336,10 @@ function prosesJaringan(rawSurvei, rawLokasi) {
   const fid9 = rawLokasi.features.find((f) => f.properties.fid === 9)
   assignSpecificNode(9, toLocalMeters(fid9.geometry.coordinates))
 
+  // Lab Matematika FMIPA = 10 (fid 7)
+  const fid7 = rawLokasi.features.find((f) => f.properties.fid === 7)
+  assignSpecificNode(10, toLocalMeters(fid7.geometry.coordinates))
+
   // Lab Biologi = 11 (fid 57)
   const fid57 = rawLokasi.features.find((f) => f.properties.fid === 57)
   assignSpecificNode(11, toLocalMeters(fid57.geometry.coordinates))
@@ -352,7 +356,7 @@ function prosesJaringan(rawSurvei, rawLokasi) {
   const fid58 = rawLokasi.features.find((f) => f.properties.fid === 58)
   assignSpecificNode(14, toLocalMeters(fid58.geometry.coordinates))
 
-  // Rumah Hewan = 15 (fid 56)
+  // Lab Biologi Lama = 15 (fid 56)
   const fid56 = rawLokasi.features.find((f) => f.properties.fid === 56)
   assignSpecificNode(15, toLocalMeters(fid56.geometry.coordinates))
 
@@ -416,7 +420,7 @@ function prosesJaringan(rawSurvei, rawLokasi) {
   }
 
   // 7. Kontraksi simpul derajat 2 non-tempat (menyederhanakan kelokan menjadi polyline geometris)
-  const tempatNodeIds = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16])
+  const tempatNodeIds = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
   for (const f of rawLokasi.features) {
     const ptM = toLocalMeters(f.geometry.coordinates)
     let minD = Infinity
@@ -605,6 +609,18 @@ function prosesJaringan(rawSurvei, rawLokasi) {
       poligon: null,
     },
     {
+      id: 'lab-matematika-fmipa',
+      fid: 7,
+      nama: 'Lab. Matematika FMIPA',
+      label: 'Lab. Matematika FMIPA',
+      kelompok: 'lab',
+      fakultas: 'FMIPA',
+      alias: ['laboratorium matematika fmipa', 'lab komputer fmipa', 'pusat komputer fmipa', 'fmipa'],
+      gedung: [{ kode: '009', lantai: 3 }],
+      titik: [10],
+      poligon: null,
+    },
+    {
       id: 'lab-biologi',
       nama: 'Lab. Biologi',
       label: 'Lab. Biologi',
@@ -637,7 +653,6 @@ function prosesJaringan(rawSurvei, rawLokasi) {
       gedung: [],
       titik: [15],
       poligon: null,
-      poligon: null,
     },
     {
       id: 'serbaguna-taman',
@@ -652,7 +667,7 @@ function prosesJaringan(rawSurvei, rawLokasi) {
     },
   ]
 
-  const handledFids = new Set([2, 3, 4, 5, 6, 9, 10, 14, 56, 57, 58])
+  const handledFids = new Set([2, 3, 4, 5, 6, 7, 9, 10, 14, 56, 57, 58])
   for (const f of rawLokasi.features) {
     const fid = f.properties.fid
     if (handledFids.has(fid)) continue
