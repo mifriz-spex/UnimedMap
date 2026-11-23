@@ -3,11 +3,11 @@ import { IkonBawah } from './Ikon'
 
 export default function Legenda() {
   return (
-    <details className="group pointer-events-auto absolute bottom-6 left-2 z-[1000] max-w-[19rem] rounded-xl border border-slate-200/80 bg-white/95 text-xs text-slate-800 shadow-md backdrop-blur-xs md:bottom-7">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-2 select-none rounded-xl px-3 py-2 font-semibold text-slate-900 hover:bg-slate-50">
+    <details className="group pointer-events-auto absolute bottom-[calc(var(--bottom-sheet-height,40dvh)+0.875rem+env(safe-area-inset-bottom,0px))] left-2.5 z-[1000] max-w-[19rem] rounded-2xl border border-slate-200/90 bg-white/95 text-xs text-slate-800 shadow-md backdrop-blur-xs transition-[bottom] duration-300 md:bottom-7 md:left-2.5">
+      <summary className="min-h-[44px] flex cursor-pointer list-none items-center justify-between gap-2 select-none rounded-2xl px-3.5 py-2.5 font-semibold text-slate-900 hover:bg-slate-50 active:bg-slate-100">
         <span>Keterangan warna</span>
         <span className="text-slate-500 transition-transform duration-200 group-open:rotate-180">
-          <IkonBawah ukuran={15} />
+          <IkonBawah ukuran={16} />
         </span>
       </summary>
       <div className="border-t border-slate-100 px-3 pt-2.5 pb-3">

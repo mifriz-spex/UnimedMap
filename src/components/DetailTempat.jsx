@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { IkonBawah, IkonKembali } from './Ikon'
 import { KELOMPOK } from '../lib/peta'
 import { formatJarak, teksLantai } from '../lib/format'
@@ -10,11 +10,13 @@ import { ambilFotoTempat } from '../lib/foto'
 export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, onKembali, onRuteKe, onRuteDari, onBuka, onPilihRuangan }) {
   const [saring, setSaring] = useState('')
   const [lantaiAktif, setLantaiAktif] = useState('semua')
+  const [prevTempatId, setPrevTempatId] = useState(tempat.id)
 
-  useEffect(() => {
+  if (prevTempatId !== tempat.id) {
+    setPrevTempatId(tempat.id)
     setSaring('')
     setLantaiAktif('semua')
-  }, [tempat.id])
+  }
 
   const isi = useMemo(() => ringkasanIsi(ruangan, tempat.id), [ruangan, tempat.id])
   const lantai = useMemo(() => ruanganPerLantai(ruangan, tempat.id), [ruangan, tempat.id])
@@ -65,17 +67,17 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
 
   return (
     <article aria-label={`Rincian ${tempat.nama}`} className="space-y-5">
-      <button type="button" onClick={onKembali} className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-800 hover:text-emerald-950">
-        <IkonKembali ukuran={16} /> Kembali
+      <button type="button" onClick={onKembali} className="min-h-[44px] inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-800 hover:text-emerald-950 py-1.5">
+        <IkonKembali ukuran={18} /> Kembali
       </button>
 
       {fotoUrl && (
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-slate-100 shadow-xs">
+        <div className="relative aspect-[16/9] w-full max-w-full overflow-hidden rounded-2xl bg-slate-100 shadow-xs sm:aspect-[4/3]">
           <img
             src={fotoUrl}
             alt={`Foto ${tempat.nama}`}
             loading="lazy"
-            className="h-full w-full object-cover"
+            className="h-full w-full max-w-full object-cover"
           />
         </div>
       )}
@@ -124,10 +126,10 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
       )}
 
       <div className="grid grid-cols-2 gap-2">
-        <button type="button" onClick={() => onRuteKe(tempat.id)} className="rounded-xl bg-emerald-800 px-3 py-3 font-semibold text-white hover:bg-emerald-900">
+        <button type="button" onClick={() => onRuteKe(tempat.id)} className="min-h-[44px] flex items-center justify-center rounded-xl bg-emerald-800 px-3 py-2.5 font-semibold text-white hover:bg-emerald-900 active:bg-emerald-950">
           Rute ke sini
         </button>
-        <button type="button" onClick={() => onRuteDari(tempat.id)} className="rounded-xl border border-slate-300 px-3 py-3 font-semibold text-slate-900 hover:bg-slate-50">
+        <button type="button" onClick={() => onRuteDari(tempat.id)} className="min-h-[44px] flex items-center justify-center rounded-xl border border-slate-300 px-3 py-2.5 font-semibold text-slate-900 hover:bg-slate-50 active:bg-slate-100">
           Rute dari sini
         </button>
       </div>
@@ -141,7 +143,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
                 key={t.id}
                 type="button"
                 onClick={() => onBuka(t.id)}
-                className="rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50"
+                className="min-h-[40px] inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100"
               >
                 {t.label} <span className="font-normal text-slate-600">· {formatJarak(jarak)}</span>
               </button>
@@ -167,7 +169,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
                         {i > 0 && ', '}
                         <button
                           type="button"
-                          className="underline decoration-dotted underline-offset-2 hover:text-emerald-800"
+                          className="min-h-[32px] inline-flex items-center underline decoration-dotted underline-offset-2 hover:text-emerald-800"
                           onClick={() => onPilihRuangan(r)}
                         >
                           {r.nama}
@@ -191,7 +193,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
               onChange={(e) => setSaring(e.target.value)}
               placeholder="Cari di gedung ini"
               autoComplete="off"
-              className="mb-2 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-base placeholder:text-slate-500"
+              className="mb-2 min-h-[48px] w-full rounded-xl border border-slate-300 px-3 py-2.5 text-base text-slate-900 placeholder:text-slate-500 focus:border-emerald-600"
             />
 
             {lantai.length > 1 && (
@@ -199,7 +201,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
                 <button
                   type="button"
                   onClick={() => setLantaiAktif('semua')}
-                  className={`flex-none rounded-full px-3 py-1 text-xs font-semibold transition ${
+                  className={`min-h-[38px] flex-none rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                     lantaiAktif === 'semua'
                       ? 'bg-emerald-800 text-white'
                       : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
@@ -215,7 +217,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
                       key={kunci}
                       type="button"
                       onClick={() => setLantaiAktif(kunci)}
-                      className={`flex-none rounded-full px-3 py-1 text-xs font-semibold transition ${
+                      className={`min-h-[38px] flex-none rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
                         aktif
                           ? 'bg-emerald-800 text-white'
                           : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
@@ -236,7 +238,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
                   open={Boolean(saring.trim()) || lantaiAktif !== 'semua' || lantai.length === 1}
                   className="rounded-xl border border-slate-200 bg-white"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between px-3 py-2.5 font-semibold text-slate-900">
+                  <summary className="min-h-[44px] flex cursor-pointer items-center justify-between px-3 py-2.5 font-semibold text-slate-900 select-none">
                     <span>
                       {l.lantai === null ? 'Lantai belum tercatat' : teksLantai(l.lantai)}{' '}
                       <span className="font-normal text-slate-600">· {l.ruangan.length} ruangan</span>
@@ -249,7 +251,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
                         <button
                           type="button"
                           onClick={() => onPilihRuangan(r)}
-                          className="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-sm hover:bg-emerald-50"
+                          className="min-h-[44px] flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm hover:bg-emerald-50 active:bg-emerald-100"
                         >
                           <span className="text-slate-900">{r.nama}</span>
                           {r.kodeTampil && <span className="flex-none text-xs text-slate-600">{r.kodeTampil}</span>}

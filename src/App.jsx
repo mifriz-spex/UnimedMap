@@ -19,7 +19,8 @@ import MapView from './components/MapView'
 import Panduan from './components/Panduan'
 
 const KUNCI_PANDUAN = 'unimed_panduan_dilihat'
-const TINGGI_PANEL = { min: 'h-[12rem]', mid: 'h-[56dvh]', max: 'h-[90dvh]' }
+const TINGGI_PANEL = { min: 'h-[4.75rem]', mid: 'h-[39dvh]', max: 'h-[88dvh]' }
+const NILAI_TINGGI_PANEL = { min: '4.75rem', mid: '39dvh', max: '88dvh' }
 const URUTAN_PANEL = ['min', 'mid', 'max']
 
 const indeks = bangunIndeksTempat(tempat, graphData.pointsById, aturanJalur)
@@ -257,7 +258,7 @@ export default function App() {
       setTujuanTempat(id)
     } else {
       setGedungPratinjau(id)
-      setPanel('min')
+      setPanel('mid')
     }
   }
 
@@ -284,35 +285,90 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-dvh flex-col md:flex-row">
+    <div className="relative flex h-full min-h-screen min-h-dvh h-dvh w-full flex-col overflow-hidden md:flex-row" style={{ '--bottom-sheet-height': NILAI_TINGGI_PANEL[panel] }}>
+      {/* Area sentuh transparan di atas panel saat max di mobile untuk menciutkan kembali */}
+      {panel === 'max' && (
+        <div
+          role="presentation"
+          onClick={() => setPanel('mid')}
+          className="fixed inset-x-0 top-0 bottom-[88dvh] z-[1040] md:hidden cursor-pointer"
+          aria-label="Ketuk area peta untuk menciutkan panel"
+        />
+      )}
+
       <aside
         aria-label="Panel pencarian dan rute"
-        className={`order-2 flex w-full flex-none flex-col rounded-t-2xl bg-white shadow-[0_-4px_16px_rgba(0,0,0,0.18)] transition-[height] duration-300 md:order-1 md:h-full md:w-[26rem] md:rounded-none md:shadow-xl ${TINGGI_PANEL[panel]} ${panelTersembunyi ? 'md:hidden' : ''}`}
+        className={`fixed inset-x-0 bottom-0 z-[1050] flex w-full flex-col rounded-t-3xl border-t border-slate-200/90 bg-white/98 shadow-[0_-8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[height] duration-300 ease-out md:static md:order-1 md:z-auto md:h-full md:w-[26rem] md:rounded-none md:border-t-0 md:shadow-xl ${TINGGI_PANEL[panel]} ${panelTersembunyi ? 'md:hidden' : ''}`}
         onFocusCapture={(e) => e.target.tagName === 'INPUT' && setPanel('max')}
       >
-        <button type="button" className="flex-none px-4 pb-1 pt-2 md:hidden" onClick={() => geserPanel(panel === 'max' ? -2 : 1)} onTouchStart={mulaiSentuh} onTouchEnd={akhirSentuh} aria-label={panel === 'max' ? 'Perkecil panel' : 'Perbesar panel'}>
-          <span className="mx-auto block h-1.5 w-12 rounded-full bg-slate-300" />
-        </button>
+        {/* Drag handle dan tombol toggle mobile */}
+        <div
+          className="flex flex-none items-center justify-between px-4 pt-2.5 pb-1 md:hidden select-none cursor-pointer"
+          onTouchStart={mulaiSentuh}
+          onTouchEnd={akhirSentuh}
+          onClick={() => geserPanel(panel === 'max' ? -1 : 1)}
+        >
+          <div className="flex-1" />
+          <div className="flex flex-col items-center justify-center py-1">
+            <span className="block h-1.5 w-12 rounded-full bg-slate-300 hover:bg-slate-400 transition-colors" />
+          </div>
+          <div className="flex-1 flex justify-end">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                geserPanel(panel === 'max' ? -2 : (panel === 'mid' ? 1 : 1))
+              }}
+              aria-label={panel === 'max' ? 'Ciutkan panel' : 'Perluas panel'}
+              className="min-h-[44px] min-w-[44px] -my-2 flex items-center justify-center text-slate-500 hover:text-slate-800"
+            >
+              <IkonBawah ukuran={18} className={`transition-transform duration-200 ${panel === 'max' ? '' : 'rotate-180'}`} />
+            </button>
+          </div>
+        </div>
 
-        <header className="flex flex-none items-center justify-between gap-2 px-4 pb-2 pt-1 md:pt-4">
+        <header className="flex flex-none items-center justify-between gap-2 px-4 pb-2 pt-0.5 md:pt-4">
           <div>
-            <h1 className="text-lg font-bold leading-tight text-slate-900">Peta Kampus Unimed</h1>
+            <h1 className="text-base sm:text-lg font-bold leading-tight text-slate-900">Peta Kampus Unimed</h1>
             <p className="hidden text-xs text-slate-600 sm:block">Navigasi gedung, fakultas &amp; ruangan jalan kaki</p>
           </div>
-          <button type="button" onClick={() => setPanduan(true)} className="inline-flex flex-none items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50" aria-label="Buka panduan cara pakai">
+          <button
+            type="button"
+            onClick={() => setPanduan(true)}
+            className="min-h-[44px] inline-flex flex-none items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100"
+            aria-label="Buka panduan cara pakai"
+          >
             <IkonBantuan ukuran={18} /> <span>Cara pakai</span>
           </button>
         </header>
 
         <div role="tablist" aria-label="Menu utama" className="flex flex-none gap-1 border-b border-slate-200 px-4">
           {[['rute', 'Rute'], ['jelajah', 'Jelajahi gedung']].map(([id, label]) => (
-            <button key={id} role="tab" type="button" id={`tab-${id}`} aria-selected={tab === id} aria-controls={`isi-${id}`} onClick={() => { setTab(id); setDetail(null) }} className={`-mb-px border-b-2 px-3 py-2.5 text-sm font-semibold ${tab === id ? 'border-emerald-800 text-emerald-900' : 'border-transparent text-slate-600 hover:text-slate-900'}`}>
+            <button
+              key={id}
+              role="tab"
+              type="button"
+              id={`tab-${id}`}
+              aria-selected={tab === id}
+              aria-controls={`isi-${id}`}
+              onClick={() => { setTab(id); setDetail(null); if (panel === 'min') setPanel('mid') }}
+              className={`min-h-[44px] -mb-px border-b-2 px-3 py-2 text-sm font-semibold transition-colors ${
+                tab === id
+                  ? 'border-emerald-800 text-emerald-900'
+                  : 'border-transparent text-slate-600 hover:text-slate-900'
+              }`}
+            >
               {label}
             </button>
           ))}
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-8 pt-4" role="tabpanel" id={`isi-${tab}`} aria-labelledby={`tab-${tab}`}>
+        <div
+          className="min-h-0 flex-1 overflow-y-auto px-4 pt-3 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] md:pb-8 bottom-sheet-scroll"
+          role="tabpanel"
+          id={`isi-${tab}`}
+          aria-labelledby={`tab-${tab}`}
+        >
           {tab === 'rute' && (
             <div className="space-y-5">
               {galatData && <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">Data ruangan terbaru belum bisa dimuat ({galatData}). Yang tampil adalah data bawaan.</p>}
@@ -395,6 +451,7 @@ export default function App() {
           {tab === 'jelajah' && (
             tempatDetail ? (
               <DetailTempat
+                key={tempatDetail.id}
                 tempat={tempatDetail}
                 indeks={indeks}
                 graph={graphData.graph}
@@ -426,7 +483,7 @@ export default function App() {
         </div>
       </aside>
 
-      <main className="relative order-1 min-h-0 flex-1 md:order-2" aria-label="Peta">
+      <main className="relative order-1 h-full w-full flex-1 overflow-hidden md:order-2" aria-label="Peta">
         <button
           type="button"
           onClick={() => setPanelTersembunyi((v) => !v)}

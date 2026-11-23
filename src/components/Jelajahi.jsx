@@ -63,7 +63,7 @@ export default function Jelajahi({ orientasi, indeks, ruangan, pilihanCepat, onB
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Cari cepat</h3>
           <div className="flex flex-wrap gap-2">
             {pilihanCepat.map((p) => (
-              <button key={p.kueri} type="button" onClick={() => onCari(p.kueri)} className="rounded-full border border-slate-300 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50">
+              <button key={p.kueri} type="button" onClick={() => onCari(p.kueri)} className="min-h-[38px] inline-flex items-center rounded-full border border-slate-300 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100">
                 {p.label}
               </button>
             ))}
@@ -78,10 +78,10 @@ export default function Jelajahi({ orientasi, indeks, ruangan, pilihanCepat, onB
           <button
             type="button"
             onClick={() => setFilterFak('SEMUA')}
-            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+            className={`min-h-[36px] inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
               filterFak === 'SEMUA'
                 ? 'bg-emerald-800 text-white'
-                : 'border border-slate-300 bg-white text-slate-700 hover:border-emerald-500 hover:bg-emerald-50'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100'
             }`}
           >
             Semua ({indeks.daftar.length})
@@ -94,10 +94,10 @@ export default function Jelajahi({ orientasi, indeks, ruangan, pilihanCepat, onB
                 key={fak}
                 type="button"
                 onClick={() => setFilterFak(fak)}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                className={`min-h-[36px] inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                   aktif
                     ? 'bg-emerald-800 text-white'
-                    : 'border border-slate-300 bg-white text-slate-700 hover:border-emerald-500 hover:bg-emerald-50'
+                    : 'border border-slate-300 bg-white text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100'
                 }`}
               >
                 {label}
@@ -127,7 +127,7 @@ export default function Jelajahi({ orientasi, indeks, ruangan, pilihanCepat, onB
                     <button
                       type="button"
                       onClick={() => onBuka(t.id)}
-                      className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left transition-colors hover:border-emerald-400 hover:bg-emerald-50"
+                      className="min-h-[48px] flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left transition-colors hover:border-emerald-400 hover:bg-emerald-50 active:bg-emerald-100"
                     >
                       <span
                         className="h-3 w-3 flex-none rounded-full border"
