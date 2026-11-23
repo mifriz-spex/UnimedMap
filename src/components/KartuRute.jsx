@@ -15,30 +15,32 @@ function Perbandingan({ rute, graphData, indeks, aturan }) {
       className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-800"
       onToggle={(e) => e.currentTarget.open && !validasi && setValidasi(validasiSemuaTempat(graphData, indeks, aturan))}
     >
-      <summary className="cursor-pointer font-semibold">Untuk laporan: bandingkan algoritma</summary>
-      <table className="mt-3 w-full text-left text-xs">
-        <thead className="text-slate-600">
-          <tr>
-            <th className="py-1 pr-2 font-semibold">Algoritma</th>
-            <th className="py-1 pr-2 font-semibold">Jarak</th>
-            <th className="py-1 pr-2 font-semibold">Titik diperiksa</th>
-            <th className="py-1 font-semibold">Waktu</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[
-            ['Dijkstra (utama)', p.dijkstra],
-            ['A* (pembanding)', p.aStar],
-          ].map(([nama, x]) => (
-            <tr key={nama} className="border-t border-slate-200">
-              <td className="py-1.5 pr-2">{nama}</td>
-              <td className="py-1.5 pr-2">{x.distance.toFixed(2)} m</td>
-              <td className="py-1.5 pr-2">{x.visitedCount}</td>
-              <td className="py-1.5">{x.ms.toFixed(3)} ms</td>
+      <summary className="min-h-[44px] flex cursor-pointer items-center font-semibold select-none">Untuk laporan: bandingkan algoritma</summary>
+      <div className="mt-2 w-full overflow-x-auto">
+        <table className="w-full min-w-[280px] text-left text-xs">
+          <thead className="text-slate-600">
+            <tr>
+              <th className="py-1 pr-2 font-semibold">Algoritma</th>
+              <th className="py-1 pr-2 font-semibold">Jarak</th>
+              <th className="py-1 pr-2 font-semibold">Titik diperiksa</th>
+              <th className="py-1 font-semibold">Waktu</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {[
+              ['Dijkstra (utama)', p.dijkstra],
+              ['A* (pembanding)', p.aStar],
+            ].map(([nama, x]) => (
+              <tr key={nama} className="border-t border-slate-200">
+                <td className="py-1.5 pr-2">{nama}</td>
+                <td className="py-1.5 pr-2">{x.distance.toFixed(2)} m</td>
+                <td className="py-1.5 pr-2">{x.visitedCount}</td>
+                <td className="py-1.5">{x.ms.toFixed(3)} ms</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <p className="mt-2 text-xs text-slate-700">Selisih jarak kedua algoritma: {p.selisih.toFixed(3)} m.</p>
       {validasi && (
         <p className={`mt-1 text-xs font-semibold ${validasi.valid ? 'text-emerald-800' : 'text-red-700'}`}>
@@ -199,12 +201,12 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
 
       {fotoTujuan ? (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-xs">
-          <div className="relative aspect-[4/3] w-full">
+          <div className="relative aspect-[16/9] w-full max-w-full sm:aspect-[4/3]">
             <img
               src={fotoTujuan}
               alt={`Foto ${namaTujuan}`}
               loading="lazy"
-              className="h-full w-full object-cover"
+              className="h-full w-full max-w-full object-cover"
             />
           </div>
           <p className="px-3 py-2 text-xs font-medium text-slate-700">
@@ -261,7 +263,7 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         <button
           type="button"
           onClick={onBagikan}
-          className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-3 py-2.5 text-sm font-semibold text-emerald-900 hover:bg-emerald-50"
+          className="min-h-[44px] inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-3.5 py-2.5 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 active:bg-emerald-100"
         >
           <IkonBagikan ukuran={18} /> Bagikan rute
         </button>
@@ -271,7 +273,7 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
             onClick={onBersihkan}
             aria-label="Bersihkan rute"
             title="Bersihkan rute"
-            className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white p-2.5 text-slate-600 transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white p-2.5 text-slate-600 transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700 active:bg-red-100"
           >
             <IkonHapus ukuran={18} />
           </button>

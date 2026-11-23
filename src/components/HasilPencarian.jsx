@@ -16,13 +16,13 @@ function geserFokus(e) {
   berikut?.focus()
 }
 
-const kelas = 'flex w-full items-start gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left transition-colors hover:border-sky-400 hover:bg-sky-50 focus-visible:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-65 disabled:hover:border-slate-200 disabled:hover:bg-white'
+const kelas = 'flex w-full items-start gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left transition-colors hover:border-sky-400 hover:bg-sky-50 focus-visible:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-65 disabled:hover:border-slate-200 disabled:hover:bg-white min-h-[48px]'
 
 function BadgeFakultas({ fakultas }) {
   if (!fakultas) return null
   const label = fakultas === 'Fasilitas Umum' ? 'Umum' : fakultas
   return (
-    <span className="ml-2 inline-flex flex-none items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700">
+    <span className="ml-1.5 inline-flex flex-none items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700">
       {label}
     </span>
   )
@@ -38,7 +38,7 @@ export default function HasilPencarian({ hasil, kueri, namaTempat, onPilihTempat
         {hasil.saran && (
           <p className="mt-2">
             Maksud kamu{' '}
-            <button type="button" onClick={() => onSaran(hasil.saran)} className="font-semibold text-sky-800 underline">
+            <button type="button" onClick={() => onSaran(hasil.saran)} className="min-h-[44px] inline-flex items-center font-semibold text-sky-800 underline p-1">
               {hasil.saran}
             </button>
             ?

@@ -3,7 +3,7 @@ import HasilPencarian from './HasilPencarian'
 import { IkonCari, IkonHapus, IkonKembali, IkonLokasi, IkonPeta, IkonTukar } from './Ikon'
 import { kapital, teksLantai } from '../lib/format'
 
-const inputKelas = 'w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-3 text-base text-slate-900 placeholder:text-slate-500 focus:border-emerald-600'
+const inputKelas = 'w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-3 text-base text-slate-900 placeholder:text-slate-500 focus:border-emerald-600 min-h-[48px]'
 
 function KotakCari({ id, label, nilai, onUbah, placeholder, onEnter, autoFokus }) {
   return (
@@ -39,18 +39,18 @@ function KotakCari({ id, label, nilai, onUbah, placeholder, onEnter, autoFokus }
 
 function KartuPilihan({ judul, utama, tambahan, onUbah, warna, onTukar }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white py-2 pl-3 pr-1.5">
+    <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white py-1.5 pl-3 pr-1.5 min-h-[52px]">
       <span className={`flex h-7 w-7 flex-none items-center justify-center rounded-full text-xs font-bold text-white ${warna}`}>{judul}</span>
       <span className="min-w-0 flex-1">
         <span className="block truncate font-semibold text-slate-900">{utama}</span>
-        {tambahan && <span className="block text-xs text-slate-600">{tambahan}</span>}
+        {tambahan && <span className="block truncate text-xs text-slate-600">{tambahan}</span>}
       </span>
       {onTukar && (
-        <button type="button" onClick={onTukar} aria-label="Tukar arah" title="Tukar arah" className="rounded-lg p-2 text-emerald-800 hover:bg-emerald-50">
+        <button type="button" onClick={onTukar} aria-label="Tukar arah" title="Tukar arah" className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100">
           <IkonTukar ukuran={18} />
         </button>
       )}
-      <button type="button" onClick={onUbah} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">
+      <button type="button" onClick={onUbah} className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100">
         Ubah
       </button>
     </div>
@@ -88,9 +88,9 @@ export default function FormRute({
                   onClick={onBersihkan}
                   aria-label="Bersihkan rute"
                   title="Bersihkan rute"
-                  className="inline-flex items-center justify-center rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-700"
+                  className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg p-2 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-700 active:bg-red-100"
                 >
-                  <IkonHapus ukuran={17} />
+                  <IkonHapus ukuran={18} />
                 </button>
               )}
             </div>
@@ -105,10 +105,10 @@ export default function FormRute({
         ) : (
           <>
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-lg font-bold text-slate-900">Mau ke mana?</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900">Mau ke mana?</h2>
               <div className="flex items-center gap-1">
                 {tujuan && (
-                  <button type="button" onClick={onBatalUbahTujuan} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">
+                  <button type="button" onClick={onBatalUbahTujuan} className="min-h-[44px] inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100">
                     Batal
                   </button>
                 )}
@@ -118,7 +118,7 @@ export default function FormRute({
                     onClick={onBersihkan}
                     aria-label="Bersihkan rute"
                     title="Bersihkan rute"
-                    className="inline-flex items-center justify-center rounded-lg p-2 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-700"
+                    className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg p-2 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-700 active:bg-red-100"
                   >
                     <IkonHapus ukuran={18} />
                   </button>
@@ -168,12 +168,12 @@ export default function FormRute({
         ) : (
           <>
             <div className="flex items-center justify-between">
-              {tujuan && !bukaTujuan ? <h2 className="text-lg font-bold text-slate-900">Dari mana kamu berangkat?</h2> : <h2 className="text-sm font-semibold text-slate-700">Titik awal (boleh diisi nanti)</h2>}
-              {asal && <button type="button" onClick={onBatalUbahAsal} className="rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Batal</button>}
+              {tujuan && !bukaTujuan ? <h2 className="text-base sm:text-lg font-bold text-slate-900">Dari mana kamu berangkat?</h2> : <h2 className="text-sm font-semibold text-slate-700">Titik awal (boleh diisi nanti)</h2>}
+              {asal && <button type="button" onClick={onBatalUbahAsal} className="min-h-[44px] inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100">Batal</button>}
             </div>
             {modeAsal === 'cari' ? (
               <>
-                <button type="button" onClick={() => setModeAsal('menu')} className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-800">
+                <button type="button" onClick={() => setModeAsal('menu')} className="min-h-[44px] inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-800 hover:text-emerald-950 py-1.5">
                   <IkonKembali ukuran={16} /> Pilihan lain
                 </button>
                 <div ref={refAsal}>
@@ -194,25 +194,25 @@ export default function FormRute({
               </>
             ) : (
               <div className="grid gap-2">
-                <button type="button" onClick={onGps} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50">
-                  <span className="text-emerald-800"><IkonLokasi /></span>
-                  <span>
+                <button type="button" onClick={onGps} className="min-h-[52px] flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100 transition-colors">
+                  <span className="text-emerald-800 flex-none"><IkonLokasi /></span>
+                  <span className="min-w-0 flex-1">
                     <span className="block font-semibold text-slate-900">Gunakan lokasi saya</span>
-                    <span className="block text-xs text-slate-600">Paling cepat jika kamu sudah di kampus</span>
+                    <span className="block text-xs text-slate-600 truncate">Paling cepat jika kamu sudah di kampus</span>
                   </span>
                 </button>
-                <button type="button" onClick={() => setModeAsal('cari')} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50">
-                  <span className="text-emerald-800"><IkonCari /></span>
-                  <span>
+                <button type="button" onClick={() => setModeAsal('cari')} className="min-h-[52px] flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100 transition-colors">
+                  <span className="text-emerald-800 flex-none"><IkonCari /></span>
+                  <span className="min-w-0 flex-1">
                     <span className="block font-semibold text-slate-900">Cari gedung atau ruangan</span>
-                    <span className="block text-xs text-slate-600">Ketik nama gedung atau ruangan di dekatmu</span>
+                    <span className="block text-xs text-slate-600 truncate">Ketik nama gedung atau ruangan di dekatmu</span>
                   </span>
                 </button>
-                <button type="button" onClick={onPilihDiPeta} className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50">
-                  <span className="text-emerald-800"><IkonPeta /></span>
-                  <span>
+                <button type="button" onClick={onPilihDiPeta} className="min-h-[52px] flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-left hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100 transition-colors">
+                  <span className="text-emerald-800 flex-none"><IkonPeta /></span>
+                  <span className="min-w-0 flex-1">
                     <span className="block font-semibold text-slate-900">Pilih di peta</span>
-                    <span className="block text-xs text-slate-600">Ketuk gedung pada peta</span>
+                    <span className="block text-xs text-slate-600 truncate">Ketuk gedung pada peta</span>
                   </span>
                 </button>
               </div>

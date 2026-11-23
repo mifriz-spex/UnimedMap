@@ -25,14 +25,14 @@ export default function CardGedung({
   return (
     <section
       aria-label={`Pratinjau ${tempat.nama}`}
-      className="pointer-events-auto absolute bottom-3 left-3 right-3 z-[1050] mx-auto max-w-md overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-2xl transition-all sm:bottom-5 sm:left-5 sm:right-auto sm:w-[23rem]"
+      className="pointer-events-auto absolute bottom-[calc(var(--bottom-sheet-height,4.75rem)+0.75rem+env(safe-area-inset-bottom,0px))] left-3 right-3 z-[1060] mx-auto max-w-md overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-2xl transition-all duration-300 md:bottom-5 md:left-5 md:right-auto md:w-[23rem]"
     >
       {/* Bagian Foto / Banner */}
-      <div className="relative h-36 w-full bg-slate-900 sm:h-40">
+      <div className="relative aspect-[16/9] w-full max-w-full bg-slate-900 sm:aspect-[16/10]">
         <img
           src={srcFoto}
           alt={punyaFoto ? `Foto ${tempat.nama}` : `Ilustrasi ${tempat.nama}`}
-          className="h-full w-full object-cover"
+          className="h-full w-full max-w-full object-cover"
           loading="eager"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
@@ -52,9 +52,9 @@ export default function CardGedung({
           type="button"
           onClick={onTutup}
           aria-label="Tutup kartu pratinjau gedung"
-          className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-slate-950/65 text-white backdrop-blur-xs transition-colors hover:bg-slate-950"
+          className="absolute right-2 top-2 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-slate-950/65 text-white backdrop-blur-xs transition-colors hover:bg-slate-950 active:bg-slate-900"
         >
-          <IkonTutup ukuran={16} />
+          <IkonTutup ukuran={18} />
         </button>
 
         {/* Judul Gedung di atas gradasi bawah foto */}
@@ -71,7 +71,7 @@ export default function CardGedung({
       {/* Ringkasan & Tombol Aksi */}
       <div className="space-y-3 p-3.5">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
-          <span>
+          <span className="break-words">
             {jumlahRuangan > 0
               ? `${jumlahRuangan} ruangan terdata di gedung ini`
               : tempat.fungsi || 'Fasilitas & area kampus Unimed'}
@@ -87,21 +87,21 @@ export default function CardGedung({
           <button
             type="button"
             onClick={() => onRuteKe(tempat.id)}
-            className="col-span-1 flex items-center justify-center rounded-xl bg-emerald-800 px-2.5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-emerald-900"
+            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl bg-emerald-800 px-2 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition-colors hover:bg-emerald-900 active:bg-emerald-950"
           >
             Rute ke sini
           </button>
           <button
             type="button"
             onClick={() => onRuteDari(tempat.id)}
-            className="col-span-1 flex items-center justify-center rounded-xl border border-emerald-700 bg-emerald-50 px-2.5 py-2 text-xs font-semibold text-emerald-900 transition-colors hover:bg-emerald-100"
+            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl border border-emerald-700 bg-emerald-50 px-2 py-2 text-xs sm:text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-100 active:bg-emerald-200"
           >
             Dari sini
           </button>
           <button
             type="button"
             onClick={() => onBukaDetail(tempat.id)}
-            className="col-span-1 flex items-center justify-center rounded-xl border border-slate-300 bg-white px-2.5 py-2 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-50"
+            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl border border-slate-300 bg-white px-2 py-2 text-xs sm:text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-50 active:bg-slate-100"
           >
             Detail
           </button>
