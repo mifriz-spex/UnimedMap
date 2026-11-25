@@ -25,7 +25,7 @@ export default function CardGedung({
   return (
     <section
       aria-label={`Pratinjau ${tempat.nama}`}
-      className="pointer-events-auto absolute bottom-[calc(var(--bottom-sheet-height,4.75rem)+0.75rem+env(safe-area-inset-bottom,0px))] left-3 right-3 z-[1060] mx-auto max-w-md overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-2xl transition-all duration-300 md:bottom-5 md:left-5 md:right-auto md:w-[23rem]"
+      className="pointer-events-auto absolute bottom-[calc(var(--bottom-sheet-height,4.75rem)+0.75rem+env(safe-area-inset-bottom,0px))] left-3 right-3 z-[1060] mx-auto max-w-md overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_32px_rgba(15,23,42,0.18)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] md:bottom-5 md:left-5 md:right-auto md:w-[23rem]"
     >
       {/* Bagian Foto / Banner */}
       <div className="relative aspect-[16/9] w-full max-w-full bg-slate-900 sm:aspect-[16/10]">
@@ -87,21 +87,21 @@ export default function CardGedung({
           <button
             type="button"
             onClick={() => onRuteKe(tempat.id)}
-            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl bg-emerald-800 px-2 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition-colors hover:bg-emerald-900 active:bg-emerald-950"
+            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl bg-[#064E3B] px-2 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#047857] active:bg-[#064E3B]"
           >
             Rute ke sini
           </button>
           <button
             type="button"
             onClick={() => onRuteDari(tempat.id)}
-            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl border border-emerald-700 bg-emerald-50 px-2 py-2 text-xs sm:text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-100 active:bg-emerald-200"
+            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl border border-[#064E3B] bg-white px-2 py-2 text-xs sm:text-sm font-semibold text-[#064E3B] transition-colors hover:bg-emerald-50 active:bg-emerald-100"
           >
             Dari sini
           </button>
           <button
             type="button"
             onClick={() => onBukaDetail(tempat.id)}
-            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl border border-slate-300 bg-white px-2 py-2 text-xs sm:text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-50 active:bg-slate-100"
+            className="col-span-1 min-h-[44px] flex items-center justify-center rounded-xl border border-slate-300 bg-white px-2 py-2 text-xs sm:text-sm font-semibold text-[#0F172A] transition-colors hover:bg-slate-50 active:bg-slate-100"
           >
             Detail
           </button>

@@ -4,6 +4,7 @@ import { CircleMarker, Circle, MapContainer, Marker, Polygon, Polyline, TileLaye
 import { KELOMPOK } from '../lib/peta'
 import { pusatTitik } from '../lib/geo'
 import { tempat as daftarTempat } from '../data'
+import { IkonLokasi } from './Ikon'
 import Legenda from './Legenda'
 
 function ikonLabel(teks, bawah = false, satelit = false) {
@@ -56,20 +57,21 @@ function AturPandangan({ batas, garis, kunciRute }) {
 function KontrolPetaAtas({ batas, tampilJalur, onToggleJalur, modePeta, onGantiModePeta }) {
   const map = useMap()
   return (
-    <div className="pointer-events-auto absolute left-2.5 top-[calc(0.625rem+env(safe-area-inset-top,0px))] z-[1000] flex max-w-[calc(100%-4rem)] flex-wrap items-center gap-1.5">
+    <div className="pointer-events-auto absolute left-2.5 top-[calc(0.625rem+env(safe-area-inset-top,0px))] z-[1000] flex max-w-[calc(100%-4rem)] flex-nowrap items-center gap-1.5 overflow-x-auto no-scrollbar">
       <button
         type="button"
         onClick={() => map.fitBounds(batas, { padding: [16, 16] })}
-        className="min-h-[44px] inline-flex items-center justify-center rounded-xl bg-white/95 px-3.5 py-2 text-xs font-semibold text-slate-900 shadow-md backdrop-blur-xs hover:bg-white active:bg-slate-100 transition-colors"
+        className="min-h-[44px] flex-none inline-flex items-center justify-center whitespace-nowrap rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 shadow-md hover:bg-slate-50 active:bg-slate-100 transition-colors"
         aria-label="Kembali ke tampilan seluruh kampus Unimed"
       >
-        Seluruh kampus
+        <span className="sm:hidden">Kampus</span>
+        <span className="hidden sm:inline">Seluruh kampus</span>
       </button>
 
       <div
         role="group"
         aria-label="Pilih tampilan peta"
-        className="inline-flex overflow-hidden rounded-xl bg-white/95 p-0.5 shadow-md backdrop-blur-xs"
+        className="inline-flex flex-none overflow-hidden rounded-xl border border-slate-200 bg-white p-0.5 shadow-md"
       >
         {[
           ['osm', 'Peta'],
@@ -82,9 +84,9 @@ function KontrolPetaAtas({ batas, tampilJalur, onToggleJalur, modePeta, onGantiM
               type="button"
               onClick={() => onGantiModePeta(id)}
               aria-pressed={aktif}
-              className={`min-h-[40px] rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
+              className={`min-h-[44px] rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
                 aktif
-                  ? 'bg-emerald-800 text-white shadow-xs'
+                  ? 'bg-[#064E3B] text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
@@ -101,10 +103,10 @@ function KontrolPetaAtas({ batas, tampilJalur, onToggleJalur, modePeta, onGantiM
             e.stopPropagation()
             onToggleJalur()
           }}
-          className={`min-h-[44px] inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold shadow-md transition-colors ${
+          className={`min-h-[44px] flex-none inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl border px-3 py-2 text-xs font-semibold shadow-md transition-colors ${
             tampilJalur
-              ? 'bg-emerald-800 text-white hover:bg-emerald-900 active:bg-emerald-950'
-              : 'bg-white/95 text-slate-700 backdrop-blur-xs hover:bg-white active:bg-slate-100'
+              ? 'border-[#064E3B] bg-[#064E3B] text-white hover:bg-[#047857]'
+              : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 active:bg-slate-100'
           }`}
           aria-pressed={tampilJalur}
           aria-label={tampilJalur ? 'Sembunyikan seluruh rute di peta' : 'Tampilkan seluruh rute di peta'}
@@ -115,7 +117,8 @@ function KontrolPetaAtas({ batas, tampilJalur, onToggleJalur, modePeta, onGantiM
               tampilJalur ? 'bg-lime-300' : 'bg-slate-400'
             }`}
           />
-          <span>{tampilJalur ? 'Semua rute aktif' : 'Lihat semua rute'}</span>
+          <span className="sm:hidden">{tampilJalur ? 'Jalur aktif' : 'Jalur'}</span>
+          <span className="hidden sm:inline">{tampilJalur ? 'Semua rute aktif' : 'Lihat semua rute'}</span>
         </button>
       )}
     </div>
@@ -211,6 +214,8 @@ export default function MapView({
   pilihPeta,
   onPilihTempat,
   onBatalPilih,
+  onLocateMe,
+  gpsMemuat = false,
 }) {
   const [petaSiap, setPetaSiap] = useState(false)
   const [modePeta, setModePeta] = useState('osm')
@@ -414,7 +419,7 @@ export default function MapView({
       </MapContainer>
 
       <div
-        className="pointer-events-none absolute right-2.5 top-[calc(0.625rem+env(safe-area-inset-top,0px))] z-[1000] flex h-11 w-11 flex-col items-center justify-center rounded-full bg-white/95 text-[10px] font-bold leading-none text-slate-800 shadow-md"
+        className="pointer-events-none absolute right-2.5 top-[calc(0.625rem+env(safe-area-inset-top,0px))] z-[1000] flex h-11 w-11 flex-col items-center justify-center rounded-full border border-slate-200/90 bg-white text-[10px] font-bold leading-none text-[#0F172A] shadow-[0_2px_10px_rgba(15,23,42,0.12)]"
         aria-label="Utara berada di bagian atas peta"
       >
         <span className="text-red-600">▲</span>U
@@ -422,13 +427,26 @@ export default function MapView({
 
       <Legenda />
 
+      {onLocateMe && (
+        <button
+          type="button"
+          onClick={onLocateMe}
+          disabled={gpsMemuat}
+          aria-label="Gunakan lokasi GPS saya saat ini"
+          title="Lokasi saya (GPS)"
+          className="peta-kontrol-bawah pointer-events-auto absolute right-2.5 bottom-[calc(var(--bottom-sheet-height,35dvh)+7.25rem+env(safe-area-inset-bottom,0px))] z-[950] flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/90 bg-white text-[#064E3B] shadow-[0_2px_10px_rgba(15,23,42,0.12)] transition-[bottom,opacity,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-emerald-50 active:bg-emerald-100 md:bottom-[6.75rem]"
+        >
+          <IkonLokasi ukuran={20} className={gpsMemuat ? 'animate-pulse' : ''} />
+        </button>
+      )}
+
       {pilihPeta && (
         <div
           role="status"
           className="absolute left-1/2 top-[calc(4.25rem+env(safe-area-inset-top,0px))] z-[1100] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 items-center gap-2 rounded-2xl bg-slate-900/95 px-3.5 py-2.5 text-sm text-white shadow-xl backdrop-blur-xs sm:top-[calc(1rem+env(safe-area-inset-top,0px))]"
         >
           <span className="flex-1 text-xs sm:text-sm">Ketuk titik gedung di peta untuk memilih {pilihPeta === 'asal' ? 'titik awal' : 'tujuan'}.</span>
-          <button type="button" onClick={onBatalPilih} className="min-h-[40px] inline-flex items-center rounded-xl bg-white/20 px-3 py-1 text-xs sm:text-sm font-semibold hover:bg-white/30 active:bg-white/40">
+          <button type="button" onClick={onBatalPilih} className="min-h-[44px] inline-flex items-center rounded-xl bg-white/20 px-3 py-1 text-xs sm:text-sm font-semibold hover:bg-white/30 active:bg-white/40">
             Batal
           </button>
         </div>

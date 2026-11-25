@@ -5,7 +5,13 @@
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
-  --bottom-sheet-height: 40dvh;
+  --bottom-sheet-height: 35dvh;
+  --color-brand-primary: #064E3B;
+  --color-brand-accent: #047857;
+  --color-ink-primary: #0F172A;
+  --color-ink-strong: #111827;
+  --color-surface-card: #FFFFFF;
+  --color-surface-subtle: #F8FAFC;
 }
 
 html, body, #root {
@@ -26,7 +32,7 @@ body {
 }
 
 /* Fokus yang jelas untuk pengguna keyboard dan pembaca layar */
-:where(button, a, input, select, summary):focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
+:where(button, a, input, select, summary):focus-visible { outline: 3px solid var(--color-brand-primary, #064E3B); outline-offset: 2px; }
 button:disabled { opacity: 0.55; cursor: not-allowed; }
 :where(button, summary) { cursor: pointer; }
 :where(button) { min-height: 2.25rem; }
@@ -34,7 +40,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 /* Tailwind (preflight) membuat gambar max-width:100%, itu merusak ubin peta Leaflet */
 .leaflet-container img { max-width: none !important; }
 .leaflet-container { font-family: inherit; background: #e5e7eb; touch-action: pan-x pan-y; }
-.leaflet-container a { color: #1d4ed8; }
+.leaflet-container a { color: var(--color-brand-primary, #064E3B); }
 
 /* Label nama gedung di tengah poligon */
 .peta-label { background: transparent; border: 0; }
@@ -53,7 +59,7 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
   border-radius: 9999px; border: 3px solid #fff; color: #fff; font-size: 14px; font-weight: 800;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
-.pin-a span { background: #16a34a; }
+.pin-a span { background: #047857; }
 .pin-b span { background: #dc2626; }
 
 /* Mode "pilih di peta": kursor menunjukkan gedung bisa diketuk */
@@ -65,29 +71,70 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
   -webkit-overflow-scrolling: touch;
 }
 
+/* Sembunyikan scrollbar pada deretan chip horizontal */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sembunyikan tombol clear bawaan browser agar diganti tombol 44x44px konsisten */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Transisi halus saat berpindah tab Rute <-> Jelajahi gedung */
+@keyframes tabMasuk {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animasi-tab {
+  animation: tabMasuk 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* Touch targets & leaflet zoom control responsif mobile */
 @media (max-width: 767px) {
   .leaflet-bottom.leaflet-right {
-    bottom: calc(var(--bottom-sheet-height, 40dvh) + 0.875rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(var(--bottom-sheet-height, 35dvh) + 0.75rem + env(safe-area-inset-bottom, 0px));
     right: 0.625rem;
-    transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
     z-index: 900;
+  }
+  [data-panel="max"] .leaflet-bottom.leaflet-right,
+  [data-panel="max"] .peta-kontrol-bawah {
+    opacity: 0;
+    pointer-events: none;
   }
   .leaflet-control-zoom {
     border-radius: 0.75rem !important;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
-    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16) !important;
+    border: 1px solid rgba(203, 213, 225, 0.95) !important;
   }
   .leaflet-control-zoom a {
     width: 44px !important;
     height: 44px !important;
     line-height: 44px !important;
     font-size: 18px !important;
-    background-color: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(4px);
+    background-color: #ffffff !important;
     color: #0f172a !important;
   }
 }
 
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

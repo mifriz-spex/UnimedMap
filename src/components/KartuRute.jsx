@@ -104,8 +104,8 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
 
   return (
     <section aria-label="Hasil rute" className="space-y-4">
-      <div role="status" aria-live="polite" className="rounded-2xl bg-emerald-900 p-4 text-white shadow-xs">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-200">
+      <div role="status" aria-live="polite" className="rounded-2xl bg-[#064E3B] p-4 text-white shadow-xs">
+        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-100">
           Menuju {tujuan.ruangan ? `${tujuan.ruangan.nama} (${namaTujuan})` : namaTujuan}
         </p>
         {sama ? (
@@ -117,7 +117,7 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
           <>
             <div className="mt-1 flex items-baseline gap-2.5">
               <p className="text-3xl font-bold">{formatJarak(rute.distance)}</p>
-              <span className="rounded-full bg-emerald-800 px-2.5 py-0.5 text-xs font-medium text-emerald-100">
+              <span className="rounded-full bg-[#047857] px-2.5 py-0.5 text-xs font-semibold text-white">
                 {teksMenit(rute.distance)} jalan kaki
               </span>
             </div>
@@ -129,9 +129,9 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
       </div>
 
       {aturanBerpengaruh.length > 0 && (
-        <div className="rounded-xl border border-teal-200 bg-teal-50 p-3 text-xs text-teal-950">
-          <p className="font-semibold text-teal-900">Penyesuaian Jalur:</p>
-          <ul className="mt-1 list-disc space-y-0.5 pl-4 text-teal-900">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-[#0F172A]">
+          <p className="font-semibold text-[#064E3B]">Penyesuaian Jalur:</p>
+          <ul className="mt-1 list-disc space-y-0.5 pl-4 text-[#0F172A]">
             {aturanBerpengaruh.map((teks, idx) => (
               <li key={idx}>{teks}</li>
             ))}
@@ -160,14 +160,14 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
       )}
 
       {navigasiLantai.langkah.length > 0 && (
-        <div className="rounded-xl border border-teal-200 bg-teal-50 p-3 text-sm text-teal-950">
-          <p className="flex items-center gap-1.5 font-semibold text-teal-900">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-[#0F172A]">
+          <p className="flex items-center gap-1.5 font-semibold text-[#064E3B]">
             <span className="flex-none">
               <IkonInfo ukuran={16} />
             </span>
             {navigasiLantai.jenis.startsWith('koneksi') ? 'Koneksi Antar Gedung:' : 'Petunjuk Navigasi Lantai:'}
           </p>
-          <ol className="mt-2 list-decimal space-y-1.5 pl-5 font-medium text-teal-950">
+          <ol className="mt-2 list-decimal space-y-1.5 pl-5 font-medium text-[#0F172A]">
             {navigasiLantai.langkah.map((l, idx) => (
               <li key={idx} className="leading-snug">
                 {l}
@@ -245,7 +245,7 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
             <li key={`${l.titikId}-${i}`} className="flex gap-3">
               <span
                 className={`mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full text-xs font-bold text-white ${
-                  l.jenis === 'mulai' ? 'bg-emerald-600' : l.jenis === 'tiba' ? 'bg-red-600' : 'bg-slate-500'
+                  l.jenis === 'mulai' ? 'bg-[#047857]' : l.jenis === 'tiba' ? 'bg-red-600' : 'bg-[#0F172A]'
                 }`}
               >
                 {l.jenis === 'mulai' ? 'A' : l.jenis === 'tiba' ? 'B' : i}
@@ -263,7 +263,7 @@ export default function KartuRute({ rute, ruteTanpaAturan, aturan, langkah, tuju
         <button
           type="button"
           onClick={onBagikan}
-          className="min-h-[44px] inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-3.5 py-2.5 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 active:bg-emerald-100"
+          className="min-h-[44px] inline-flex items-center gap-2 rounded-xl border border-[#047857] bg-white px-3.5 py-2.5 text-sm font-semibold text-[#064E3B] hover:bg-emerald-50 active:bg-emerald-100"
         >
           <IkonBagikan ukuran={18} /> Bagikan rute
         </button>

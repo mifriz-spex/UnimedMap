@@ -3,8 +3,8 @@ import { IkonBawah } from './Ikon'
 
 export default function Legenda() {
   return (
-    <details className="group pointer-events-auto absolute bottom-[calc(var(--bottom-sheet-height,40dvh)+0.875rem+env(safe-area-inset-bottom,0px))] left-2.5 z-[1000] max-w-[19rem] rounded-2xl border border-slate-200/90 bg-white/95 text-xs text-slate-800 shadow-md backdrop-blur-xs transition-[bottom] duration-300 md:bottom-7 md:left-2.5">
-      <summary className="min-h-[44px] flex cursor-pointer list-none items-center justify-between gap-2 select-none rounded-2xl px-3.5 py-2.5 font-semibold text-slate-900 hover:bg-slate-50 active:bg-slate-100">
+    <details className="peta-kontrol-bawah group pointer-events-auto absolute bottom-[calc(var(--bottom-sheet-height,35dvh)+0.75rem+env(safe-area-inset-bottom,0px))] left-2.5 z-[1000] max-w-[18rem] rounded-xl border border-slate-200/90 bg-white text-xs text-[#0F172A] shadow-[0_2px_10px_rgba(15,23,42,0.12)] transition-[bottom,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] md:bottom-7 md:left-2.5">
+      <summary className="min-h-[44px] flex cursor-pointer list-none items-center justify-between gap-2 select-none rounded-xl px-3.5 py-2.5 font-semibold text-[#0F172A] hover:bg-slate-50 active:bg-slate-100">
         <span>Keterangan warna</span>
         <span className="text-slate-500 transition-transform duration-200 group-open:rotate-180">
           <IkonBawah ukuran={16} />

@@ -19,8 +19,8 @@ import MapView from './components/MapView'
 import Panduan from './components/Panduan'
 
 const KUNCI_PANDUAN = 'unimed_panduan_dilihat'
-const TINGGI_PANEL = { min: 'h-[4.75rem]', mid: 'h-[39dvh]', max: 'h-[88dvh]' }
-const NILAI_TINGGI_PANEL = { min: '4.75rem', mid: '39dvh', max: '88dvh' }
+const TINGGI_PANEL = { min: 'h-[4.75rem]', mid: 'h-[35dvh]', max: 'h-[88dvh]' }
+const NILAI_TINGGI_PANEL = { min: '4.75rem', mid: '35dvh', max: '88dvh' }
 const URUTAN_PANEL = ['min', 'mid', 'max']
 
 const indeks = bangunIndeksTempat(tempat, graphData.pointsById, aturanJalur)
@@ -258,7 +258,7 @@ export default function App() {
       setTujuanTempat(id)
     } else {
       setGedungPratinjau(id)
-      setPanel('mid')
+      setPanel('min')
     }
   }
 
@@ -285,21 +285,27 @@ export default function App() {
   }
 
   return (
-    <div className="relative flex h-full min-h-screen min-h-dvh h-dvh w-full flex-col overflow-hidden md:flex-row" style={{ '--bottom-sheet-height': NILAI_TINGGI_PANEL[panel] }}>
+    <div
+      data-panel={panel}
+      className="relative flex h-full min-h-screen min-h-dvh h-dvh w-full flex-col overflow-hidden md:flex-row"
+      style={{ '--bottom-sheet-height': NILAI_TINGGI_PANEL[panel] }}
+    >
       {/* Area sentuh transparan di atas panel saat max di mobile untuk menciutkan kembali */}
       {panel === 'max' && (
-        <div
-          role="presentation"
+        <button
+          type="button"
           onClick={() => setPanel('mid')}
-          className="fixed inset-x-0 top-0 bottom-[88dvh] z-[1040] md:hidden cursor-pointer"
+          className="fixed inset-x-0 top-0 bottom-[88dvh] z-[1040] md:hidden cursor-pointer bg-transparent border-0 p-0"
           aria-label="Ketuk area peta untuk menciutkan panel"
         />
       )}
 
       <aside
         aria-label="Panel pencarian dan rute"
-        className={`fixed inset-x-0 bottom-0 z-[1050] flex w-full flex-col rounded-t-3xl border-t border-slate-200/90 bg-white/98 shadow-[0_-8px_30px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[height] duration-300 ease-out md:static md:order-1 md:z-auto md:h-full md:w-[26rem] md:rounded-none md:border-t-0 md:shadow-xl ${TINGGI_PANEL[panel]} ${panelTersembunyi ? 'md:hidden' : ''}`}
-        onFocusCapture={(e) => e.target.tagName === 'INPUT' && setPanel('max')}
+        className={`fixed inset-x-0 bottom-0 z-[1050] flex w-full flex-col rounded-t-3xl border-t border-slate-200 bg-white shadow-[0_-8px_30px_rgba(15,23,42,0.14)] transition-[height] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] md:static md:order-1 md:z-auto md:h-full md:w-[26rem] md:rounded-none md:border-t-0 md:shadow-xl ${TINGGI_PANEL[panel]} ${panelTersembunyi ? 'md:hidden' : ''}`}
+        onFocusCapture={(e) => {
+          if (e.target.tagName === 'INPUT' && window.innerWidth < 768) setPanel('max')
+        }}
       >
         {/* Drag handle dan tombol toggle mobile */}
         <div
@@ -335,7 +341,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => setPanduan(true)}
-            className="min-h-[44px] inline-flex flex-none items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100"
+            className="min-h-[44px] inline-flex flex-none items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs sm:text-sm font-semibold text-[#064E3B] hover:bg-emerald-50 active:bg-emerald-100"
             aria-label="Buka panduan cara pakai"
           >
             <IkonBantuan ukuran={18} /> <span>Cara pakai</span>
@@ -354,8 +360,8 @@ export default function App() {
               onClick={() => { setTab(id); setDetail(null); if (panel === 'min') setPanel('mid') }}
               className={`min-h-[44px] -mb-px border-b-2 px-3 py-2 text-sm font-semibold transition-colors ${
                 tab === id
-                  ? 'border-emerald-800 text-emerald-900'
-                  : 'border-transparent text-slate-600 hover:text-slate-900'
+                  ? 'border-[#064E3B] text-[#064E3B]'
+                  : 'border-transparent text-slate-600 hover:text-[#0F172A]'
               }`}
             >
               {label}
@@ -364,13 +370,13 @@ export default function App() {
         </div>
 
         <div
-          className="min-h-0 flex-1 overflow-y-auto px-4 pt-3 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] md:pb-8 bottom-sheet-scroll"
+          className="min-h-0 flex-1 overflow-y-auto px-4 pt-3.5 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] md:pb-8 bottom-sheet-scroll"
           role="tabpanel"
           id={`isi-${tab}`}
           aria-labelledby={`tab-${tab}`}
         >
           {tab === 'rute' && (
-            <div className="space-y-5">
+            <div key="tab-rute" className="animasi-tab space-y-5">
               {galatData && <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">Data ruangan terbaru belum bisa dimuat ({galatData}). Yang tampil adalah data bawaan.</p>}
               <FormRute
                 tujuan={tujuan}
@@ -407,21 +413,26 @@ export default function App() {
                   {cepat.length > 0 && (
                     <div>
                       <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Cari cepat</h3>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="no-scrollbar flex flex-nowrap gap-2 overflow-x-auto pb-1">
                         {cepat.map((p) => (
-                          <button key={p.kueri} type="button" onClick={() => setKueriTujuan(p.kueri)} className="rounded-full border border-slate-300 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50">
+                          <button
+                            key={p.kueri}
+                            type="button"
+                            onClick={() => setKueriTujuan(p.kueri)}
+                            className="min-h-[44px] flex-none whitespace-nowrap rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition-colors hover:border-[#047857] hover:bg-emerald-50 active:bg-emerald-100"
+                          >
                             {p.label}
                           </button>
                         ))}
                       </div>
                     </div>
                   )}
-                  <button type="button" onClick={() => setTab('jelajah')} className="flex w-full items-center justify-between rounded-xl border border-emerald-200/70 bg-emerald-50 px-4 py-3 text-left text-emerald-950 transition-colors hover:bg-emerald-100">
+                  <button type="button" onClick={() => setTab('jelajah')} className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-left text-[#0F172A] transition-colors hover:border-[#047857] hover:bg-emerald-50/60 active:bg-emerald-100/70">
                     <span>
-                      <span className="block font-semibold">Baru di Unimed?</span>
-                      <span className="block text-sm text-emerald-900">Jelajahi {tempat.length} lokasi di {jumlahFakultas} fakultas &amp; fasilitas kampus.</span>
+                      <span className="block font-semibold text-[#0F172A]">Baru di Unimed?</span>
+                      <span className="block text-sm text-slate-600">Jelajahi {tempat.length} lokasi di {jumlahFakultas} fakultas &amp; fasilitas kampus.</span>
                     </span>
-                    <IkonBawah ukuran={20} className="-rotate-90 flex-none text-emerald-800" />
+                    <IkonBawah ukuran={20} className="-rotate-90 flex-none text-[#064E3B]" />
                   </button>
                 </section>
               )}
@@ -449,30 +460,32 @@ export default function App() {
           )}
 
           {tab === 'jelajah' && (
-            tempatDetail ? (
-              <DetailTempat
-                key={tempatDetail.id}
-                tempat={tempatDetail}
-                indeks={indeks}
-                graph={graphData.graph}
-                ruangan={daftarRuangan}
-                aturan={aturanJalur}
-                onKembali={() => setDetail(null)}
-                onBuka={setDetail}
-                onRuteKe={(id) => setTujuanTempat(id)}
-                onRuteDari={(id) => setAsalTempat(id)}
-                onPilihRuangan={(r) => r.tempatId && setTujuanTempat(r.tempatId, r)}
-              />
-            ) : (
-              <Jelajahi
-                orientasi={orientasi}
-                indeks={indeks}
-                ruangan={daftarRuangan}
-                pilihanCepat={cepat}
-                onBuka={setDetail}
-                onCari={(q) => { setTab('rute'); setKueriTujuan(q); setBukaTujuan(true) }}
-              />
-            )
+            <div key="tab-jelajah" className="animasi-tab">
+              {tempatDetail ? (
+                <DetailTempat
+                  key={tempatDetail.id}
+                  tempat={tempatDetail}
+                  indeks={indeks}
+                  graph={graphData.graph}
+                  ruangan={daftarRuangan}
+                  aturan={aturanJalur}
+                  onKembali={() => setDetail(null)}
+                  onBuka={setDetail}
+                  onRuteKe={(id) => setTujuanTempat(id)}
+                  onRuteDari={(id) => setAsalTempat(id)}
+                  onPilihRuangan={(r) => r.tempatId && setTujuanTempat(r.tempatId, r)}
+                />
+              ) : (
+                <Jelajahi
+                  orientasi={orientasi}
+                  indeks={indeks}
+                  ruangan={daftarRuangan}
+                  pilihanCepat={cepat}
+                  onBuka={setDetail}
+                  onCari={(q) => { setTab('rute'); setKueriTujuan(q); setBukaTujuan(true) }}
+                />
+              )}
+            </div>
           )}
 
           <footer className="mt-8 border-t border-slate-200 pt-4 text-xs text-slate-600">
@@ -511,6 +524,8 @@ export default function App() {
           pilihPeta={pilihPeta}
           onPilihTempat={klikPeta}
           onBatalPilih={() => { setPilihPeta(null); setPanel('mid') }}
+          onLocateMe={pakaiGps}
+          gpsMemuat={statusGps.jenis === 'info' && statusGps.pesan.includes('Mencari')}
         />
 
         {tempatPratinjau && !pilihPeta && (

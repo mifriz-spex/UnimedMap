@@ -1,9 +1,9 @@
 import { useRef } from 'react'
 import HasilPencarian from './HasilPencarian'
-import { IkonCari, IkonHapus, IkonKembali, IkonLokasi, IkonPeta, IkonTukar } from './Ikon'
+import { IkonCari, IkonHapus, IkonKembali, IkonLokasi, IkonPeta, IkonTukar, IkonTutup } from './Ikon'
 import { kapital, teksLantai } from '../lib/format'
 
-const inputKelas = 'w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-3 text-base text-slate-900 placeholder:text-slate-500 focus:border-emerald-600 min-h-[48px]'
+const inputKelas = 'w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-11 text-base text-[#0F172A] placeholder:text-slate-500 focus:border-[#047857] min-h-[48px]'
 
 function KotakCari({ id, label, nilai, onUbah, placeholder, onEnter, autoFokus }) {
   return (
@@ -33,6 +33,16 @@ function KotakCari({ id, label, nilai, onUbah, placeholder, onEnter, autoFokus }
         }}
         className={inputKelas}
       />
+      {nilai && (
+        <button
+          type="button"
+          onClick={() => onUbah('')}
+          aria-label="Hapus kata pencarian"
+          className="absolute right-1 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-[#0F172A]"
+        >
+          <IkonTutup ukuran={16} />
+        </button>
+      )}
     </div>
   )
 }
@@ -46,11 +56,11 @@ function KartuPilihan({ judul, utama, tambahan, onUbah, warna, onTukar }) {
         {tambahan && <span className="block truncate text-xs text-slate-600">{tambahan}</span>}
       </span>
       {onTukar && (
-        <button type="button" onClick={onTukar} aria-label="Tukar arah" title="Tukar arah" className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100">
+        <button type="button" onClick={onTukar} aria-label="Tukar arah" title="Tukar arah" className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-[#064E3B] hover:bg-emerald-50 active:bg-emerald-100">
           <IkonTukar ukuran={18} />
         </button>
       )}
-      <button type="button" onClick={onUbah} className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg px-2.5 py-1.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100">
+      <button type="button" onClick={onUbah} className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg px-2.5 py-1.5 text-sm font-semibold text-[#064E3B] hover:bg-emerald-50 active:bg-emerald-100">
         Ubah
       </button>
     </div>
@@ -151,7 +161,7 @@ export default function FormRute({
         {tampilAsal ? (
           <KartuPilihan
             judul="A"
-            warna="bg-green-600"
+            warna="bg-[#047857]"
             utama={asal.jenis === 'gps' ? 'Lokasi saya' : (asal.ruangan ? asal.ruangan.nama : (asal.tempat?.nama || 'Titik awal'))}
             tambahan={
               asal.jenis === 'gps'

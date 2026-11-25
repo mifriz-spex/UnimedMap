@@ -61,9 +61,9 @@ export default function Jelajahi({ orientasi, indeks, ruangan, pilihanCepat, onB
       {pilihanCepat.length > 0 && (
         <div>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Cari cepat</h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="no-scrollbar flex flex-nowrap gap-2 overflow-x-auto pb-1">
             {pilihanCepat.map((p) => (
-              <button key={p.kueri} type="button" onClick={() => onCari(p.kueri)} className="min-h-[38px] inline-flex items-center rounded-full border border-slate-300 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100">
+              <button key={p.kueri} type="button" onClick={() => onCari(p.kueri)} className="min-h-[44px] flex-none whitespace-nowrap inline-flex items-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:border-[#047857] hover:bg-emerald-50 active:bg-emerald-100">
                 {p.label}
               </button>
             ))}
@@ -74,14 +74,14 @@ export default function Jelajahi({ orientasi, indeks, ruangan, pilihanCepat, onB
       {/* Filter Chip Fakultas */}
       <div>
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Filter Fakultas & Area</h3>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="no-scrollbar flex flex-nowrap gap-2 overflow-x-auto pb-1">
           <button
             type="button"
             onClick={() => setFilterFak('SEMUA')}
-            className={`min-h-[36px] inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+            className={`min-h-[44px] flex-none whitespace-nowrap inline-flex items-center rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${
               filterFak === 'SEMUA'
-                ? 'bg-emerald-800 text-white'
-                : 'border border-slate-300 bg-white text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100'
+                ? 'bg-[#064E3B] text-white'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-[#047857] hover:bg-emerald-50 active:bg-emerald-100'
             }`}
           >
             Semua ({indeks.daftar.length})
@@ -94,10 +94,10 @@ export default function Jelajahi({ orientasi, indeks, ruangan, pilihanCepat, onB
                 key={fak}
                 type="button"
                 onClick={() => setFilterFak(fak)}
-                className={`min-h-[36px] inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                className={`min-h-[44px] flex-none whitespace-nowrap inline-flex items-center rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${
                   aktif
-                    ? 'bg-emerald-800 text-white'
-                    : 'border border-slate-300 bg-white text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100'
+                    ? 'bg-[#064E3B] text-white'
+                    : 'border border-slate-300 bg-white text-slate-700 hover:border-[#047857] hover:bg-emerald-50 active:bg-emerald-100'
                 }`}
               >
                 {label}

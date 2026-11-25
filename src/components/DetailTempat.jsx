@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { IkonBawah, IkonKembali } from './Ikon'
+import { IkonBawah, IkonKembali, IkonTutup } from './Ikon'
 import { KELOMPOK } from '../lib/peta'
 import { formatJarak, teksLantai } from '../lib/format'
 import { posisiRelatif, tempatTerhubung } from '../lib/places'
@@ -67,7 +67,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
 
   return (
     <article aria-label={`Rincian ${tempat.nama}`} className="space-y-5">
-      <button type="button" onClick={onKembali} className="min-h-[44px] inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-800 hover:text-emerald-950 py-1.5">
+      <button type="button" onClick={onKembali} className="min-h-[44px] inline-flex items-center gap-1.5 text-sm font-semibold text-[#064E3B] hover:text-[#047857] py-1.5">
         <IkonKembali ukuran={18} /> Kembali
       </button>
 
@@ -85,12 +85,7 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
       <header>
         {infoKelompok && (
           <span
-            className="mb-1.5 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold"
-            style={{
-              backgroundColor: `${infoKelompok.warna}18`,
-              borderColor: `${infoKelompok.warna}55`,
-              color: infoKelompok.warna,
-            }}
+            className="mb-1.5 inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-50 px-2.5 py-0.5 text-xs font-semibold text-[#0F172A]"
           >
             <span className="h-2 w-2 rounded-full" style={{ backgroundColor: infoKelompok.warna }} />
             {tempat.fakultas && tempat.fakultas !== infoKelompok.nama
@@ -126,10 +121,10 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
       )}
 
       <div className="grid grid-cols-2 gap-2">
-        <button type="button" onClick={() => onRuteKe(tempat.id)} className="min-h-[44px] flex items-center justify-center rounded-xl bg-emerald-800 px-3 py-2.5 font-semibold text-white hover:bg-emerald-900 active:bg-emerald-950">
+        <button type="button" onClick={() => onRuteKe(tempat.id)} className="min-h-[44px] flex items-center justify-center rounded-xl bg-[#064E3B] px-3 py-2.5 font-semibold text-white hover:bg-[#047857] active:bg-[#064E3B]">
           Rute ke sini
         </button>
-        <button type="button" onClick={() => onRuteDari(tempat.id)} className="min-h-[44px] flex items-center justify-center rounded-xl border border-slate-300 px-3 py-2.5 font-semibold text-slate-900 hover:bg-slate-50 active:bg-slate-100">
+        <button type="button" onClick={() => onRuteDari(tempat.id)} className="min-h-[44px] flex items-center justify-center rounded-xl border border-slate-300 bg-white px-3 py-2.5 font-semibold text-[#0F172A] hover:bg-slate-50 active:bg-slate-100">
           Rute dari sini
         </button>
       </div>
@@ -186,25 +181,37 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
           <section aria-label="Isi gedung per lantai">
             <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">Isi gedung per lantai</h3>
             <label htmlFor="saring-ruangan" className="sr-only">Saring ruangan di gedung ini</label>
-            <input
-              id="saring-ruangan"
-              type="search"
-              value={saring}
-              onChange={(e) => setSaring(e.target.value)}
-              placeholder="Cari di gedung ini"
-              autoComplete="off"
-              className="mb-2 min-h-[48px] w-full rounded-xl border border-slate-300 px-3 py-2.5 text-base text-slate-900 placeholder:text-slate-500 focus:border-emerald-600"
-            />
+            <div className="relative mb-2">
+              <input
+                id="saring-ruangan"
+                type="search"
+                value={saring}
+                onChange={(e) => setSaring(e.target.value)}
+                placeholder="Cari di gedung ini"
+                autoComplete="off"
+                className="min-h-[48px] w-full rounded-xl border border-slate-300 py-2.5 pl-3 pr-11 text-base text-[#0F172A] placeholder:text-slate-500 focus:border-[#047857]"
+              />
+              {saring && (
+                <button
+                  type="button"
+                  onClick={() => setSaring('')}
+                  aria-label="Hapus saringan ruangan"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-[#0F172A]"
+                >
+                  <IkonTutup ukuran={16} />
+                </button>
+              )}
+            </div>
 
             {lantai.length > 1 && (
-              <div className="mb-2.5 flex gap-1.5 overflow-x-auto pb-1">
+              <div className="no-scrollbar mb-2.5 flex flex-nowrap gap-2 overflow-x-auto pb-1">
                 <button
                   type="button"
                   onClick={() => setLantaiAktif('semua')}
-                  className={`min-h-[38px] flex-none rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+                  className={`min-h-[44px] flex-none whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold transition ${
                     lantaiAktif === 'semua'
-                      ? 'bg-emerald-800 text-white'
-                      : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                      ? 'bg-[#064E3B] text-white'
+                      : 'border border-slate-300 bg-white text-[#0F172A] hover:border-[#047857] hover:bg-emerald-50'
                   }`}
                 >
                   Semua ({isi.total})
@@ -217,10 +224,10 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
                       key={kunci}
                       type="button"
                       onClick={() => setLantaiAktif(kunci)}
-                      className={`min-h-[38px] flex-none rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+                      className={`min-h-[44px] flex-none whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold transition ${
                         aktif
-                          ? 'bg-emerald-800 text-white'
-                          : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                          ? 'bg-[#064E3B] text-white'
+                          : 'border border-slate-300 bg-white text-[#0F172A] hover:border-[#047857] hover:bg-emerald-50'
                       }`}
                     >
                       {l.lantai === null ? 'Lainnya' : `Lt. ${l.lantai}`}
