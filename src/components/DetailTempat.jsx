@@ -10,12 +10,14 @@ import { ambilFotoTempat } from '../lib/foto'
 export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, onKembali, onRuteKe, onRuteDari, onBuka, onPilihRuangan }) {
   const [saring, setSaring] = useState('')
   const [lantaiAktif, setLantaiAktif] = useState('semua')
+  const [terhubungTerbuka, setTerhubungTerbuka] = useState(false)
   const [prevTempatId, setPrevTempatId] = useState(tempat.id)
 
   if (prevTempatId !== tempat.id) {
     setPrevTempatId(tempat.id)
     setSaring('')
     setLantaiAktif('semua')
+    setTerhubungTerbuka(false)
   }
 
   const isi = useMemo(() => ringkasanIsi(ruangan, tempat.id), [ruangan, tempat.id])
@@ -128,24 +130,6 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
           Rute dari sini
         </button>
       </div>
-
-      {terhubung.length > 0 && (
-        <section>
-          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">Tersambung langsung dengan</h3>
-          <div className="flex flex-wrap gap-2">
-            {terhubung.map(({ tempat: t, jarak }) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => onBuka(t.id)}
-                className="min-h-[40px] inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100"
-              >
-                {t.label} <span className="font-normal text-slate-600">· {formatJarak(jarak)}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
 
       {isi.total > 0 ? (
         <>
@@ -273,6 +257,38 @@ export default function DetailTempat({ tempat, indeks, graph, ruangan, aturan, o
         </>
       ) : (
         <p className="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">Belum ada data ruangan untuk tempat ini.</p>
+      )}
+
+      {terhubung.length > 0 && (
+        <section aria-label="Gedung terhubung langsung" className="rounded-xl border border-slate-200 bg-white">
+          <button
+            type="button"
+            aria-expanded={terhubungTerbuka}
+            aria-controls="daftar-gedung-terhubung"
+            onClick={() => setTerhubungTerbuka((buka) => !buka)}
+            className="min-h-[44px] flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-900 hover:bg-slate-50 active:bg-slate-100"
+          >
+            <span>Gedung terhubung langsung ({terhubung.length})</span>
+            <IkonBawah
+              ukuran={18}
+              className={`flex-none text-slate-500 transition-transform ${terhubungTerbuka ? 'rotate-180' : ''}`}
+            />
+          </button>
+          {terhubungTerbuka && (
+            <div id="daftar-gedung-terhubung" className="flex flex-wrap gap-2 border-t border-slate-100 px-3 py-3">
+              {terhubung.map(({ tempat: t, jarak }) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => onBuka(t.id)}
+                  className="min-h-[44px] inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-900 hover:border-emerald-500 hover:bg-emerald-50 active:bg-emerald-100"
+                >
+                  {t.label} <span className="font-normal text-slate-600">· {formatJarak(jarak)}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
       )}
     </article>
   )

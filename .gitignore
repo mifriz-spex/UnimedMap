@@ -36,3 +36,9 @@ Thumbs.db
 # agentic
 .GEMINI.md 
 .product_requirements_document_unimedmap.md
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
